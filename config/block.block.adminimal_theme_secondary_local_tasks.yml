@@ -1,0 +1,22 @@
+uuid: 30ebd81a-d97d-4611-b571-dccf242e49a7
+langcode: fr
+status: true
+dependencies:
+  theme:
+    - adminimal_theme
+_core:
+  default_config_hash: DJ7Om1C2xWr2GI8CjZaZtyWpP-0S3hRR3oROZl1oesc
+id: adminimal_theme_secondary_local_tasks
+theme: adminimal_theme
+region: pre_content
+weight: 0
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Onglets secondaires'
+  provider: core
+  label_display: '0'
+  primary: false
+  secondary: true
+visibility: {  }

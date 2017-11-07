@@ -1,0 +1,22 @@
+add site entities:
+  title: 'Create new Site entities'
+
+administer site entities:
+  title: 'Administer Site entities'
+  description: 'Allow to access the administration form to configure Site entities.'
+  restrict access: true
+
+delete site entities:
+  title: 'Delete Site entities'
+
+edit site entities:
+  title: 'Edit Site entities'
+
+access site overview:
+  title: 'Access the Site overview page'
+
+view published site entities:
+  title: 'View published Site entities'
+
+view unpublished site entities:
+  title: 'View unpublished Site entities'

@@ -1,0 +1,5 @@
+name: site_factory
+type: module
+description: Site Factory
+core: 8.x
+package: Site Factory

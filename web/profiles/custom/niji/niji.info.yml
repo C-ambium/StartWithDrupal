@@ -1,0 +1,27 @@
+name: niji
+type: profile
+description: 'Niji Profile'
+core: 8.x
+dependencies:
+
+  # Drupal core
+  - block
+  - config
+  - dynamic_page_cache
+  - help
+  - language
+  - page_cache
+  - toolbar
+  - user
+
+  # Drupal contrib
+  - config_filter
+  - redis
+
+themes:
+  - seven
+
+config_install: true
+config:
+  system.site:
+    default_langcode: fr

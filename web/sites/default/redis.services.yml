@@ -1,0 +1,6 @@
+services:
+  cache_tags.invalidator.checksum:
+   class: Drupal\redis\Cache\RedisCacheTagsChecksum
+   arguments: ['@redis.factory']
+   tags:
+     - { name: cache_tags_invalidator }
