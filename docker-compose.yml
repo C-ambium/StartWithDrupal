@@ -83,15 +83,6 @@ services:
       - 'traefik.port=8025'
       - 'traefik.frontend.rule=Host:mailhog.arval.site-factory.localhost'
 
-  portainer:
-    image: portainer/portainer
-    command: --no-auth -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - 'traefik.port=9000'
-      - 'traefik.frontend.rule=Host:portainer.arval.site-factory.localhost'
-
   traefik:
     image: traefik
     restart: unless-stopped
