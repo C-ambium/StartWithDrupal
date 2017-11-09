@@ -1,4 +1,4 @@
-# Socle Drupal
+# Arval Site Factory
 
 Ce socle applicatif est totalement découplée de tout hébergement.
 Il peut être utilisé dans un environnement LAMP, tout comme dans un environnement docker par exemple.

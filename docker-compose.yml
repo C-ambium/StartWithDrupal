@@ -15,13 +15,25 @@ services:
     environment:
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
       PHP_FPM_CLEAR_ENV: "no"
-      DB_HOST: mariadb
-      DB_USER: drupal
-      DB_PASSWORD: drupal
-      DB_NAME: drupal
-      DB_DRIVER: mysql
     volumes:
       - .:/var/www/html:cached
+
+#  npm:
+#    image: wodby/node
+#    volumes_from:
+#      - php
+#    user: www-data
+#    command: npm install
+#
+#  gulp:
+#    image: wodby/node
+#    volumes_from:
+#      - php
+#    depends_on:
+#      - npm
+#    user: www-data
+#    working_dir: /var/www/html/web/sites/all/themes
+#    command: gulp watch
 
   apache:
     image: wodby/php-apache:2.4-2.0.0
