@@ -17,13 +17,16 @@ build:
     paths:
     - build/
     expire_in: 1 week
+  cache:
+    paths:
+    - ~/.composer
 
 code quality:
   stage: test
   dependencies:
     - build
   script:
-    - ./automation/code_sniffer.sh
+    - ./automation/bin/code_sniffer.sh
 
 #deploy-integ:
 #  stage: deploy
