@@ -1,0 +1,42 @@
+image: anasdox/phpwebbuilder:latest
+
+variables:
+  BASE_DOMAINE: docker.localhost
+
+stages:
+  - build
+  - test
+#  - deploy
+
+build:
+  stage: build
+  script:
+    - composer install
+    - ./automation/bin/build.sh
+  artifacts:
+    paths:
+    - build/
+    expire_in: 1 week
+
+code quality:
+  stage: test
+  dependencies:
+    - build
+  script:
+    - ./automation/code_sniffer.sh
+
+#deploy-integ:
+#  stage: deploy
+#  dependencies:
+#    - build
+#  environment:
+#    name: CI
+#    url: http://${CI_PROJECT_NAME}.ci.dalkia.niji.delivery
+#  only:
+#    - master
+#  tags:
+#    - CI
+#  script:
+#    - docker-compose build
+#    - docker-compose up -d
+#    - docker-compose restart#
