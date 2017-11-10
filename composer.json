@@ -110,12 +110,10 @@
   "scripts": {
     "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
     "post-install-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-      "DrupalApp\\composer\\Settings::prepare"
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
     ],
     "post-update-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
-      "DrupalApp\\composer\\Settings::prepare"
+      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
     ],
     "pre-install-cmd": [
       "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
