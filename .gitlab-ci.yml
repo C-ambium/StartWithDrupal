@@ -1,43 +1,53 @@
-image: anasdox/phpwebbuilder:latest
 
-variables:
-  BASE_DOMAINE: docker.localhost
+
+cache:
+  key: "$CI_BUILD_NAME"
+  untracked: true
+
+image: anasdox/phpwebbuilder:latest
 
 stages:
   - build
-  - test
-#  - deploy
+  - quality-gates
+  - unit-test
+  - package
+  - deploy
+  - integration-test
+  - fonctional-test
 
 build:
   stage: build
   script:
-    - composer install
     - ./automation/bin/build.sh
   artifacts:
     paths:
-    - build/
+    - .
     expire_in: 1 week
-  cache:
-    paths:
-    - ~/.composer
 
-code quality:
-  stage: test
+code-sniffer:
+  stage: quality-gates
   dependencies:
     - build
   script:
     - ./automation/bin/code_sniffer.sh
 
-#deploy-integ:
-#  stage: deploy
+#unit-test:
+#  stage: unit-test
 #  dependencies:
 #    - build
-#  environment:
-#    name: CI
-#    url: http://${CI_PROJECT_NAME}.ci.dalkia.niji.delivery
-#  only:
-#    - master
-#  tags:
+#  script:
+#    - ./automation/bin/unit-test.sh
+
+deploy-integ:
+  stage: deploy
+  dependencies:
+    - build
+  environment:
+    name: CI
+    url: http://${CI_PROJECT_NAME}.ci.dalkia.niji.delivery
+  only:
+    - master
+  tags:
 #    - CI
 #  script:
 #    - docker-compose build
