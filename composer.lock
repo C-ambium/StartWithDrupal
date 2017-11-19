@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d81e205d182c979ec78f37aff169f60c",
+    "content-hash": "d6e61cff4f1b484e3773ab28153a4e92",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -2814,6 +2814,46 @@
                 "xml"
             ],
             "time": "2017-09-04T12:26:28+00:00"
+        },
+        {
+            "name": "niji-digital/drupal-settings",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NijiDigital/drupal-settings.git",
+                "reference": "5fcc7e7b4787b25fd44fe3108cda1c4e7e555906"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NijiDigital/drupal-settings/zipball/5fcc7e7b4787b25fd44fe3108cda1c4e7e555906",
+                "reference": "5fcc7e7b4787b25fd44fe3108cda1c4e7e555906",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0.0",
+                "drupal/core": "~8.4",
+                "php": ">=5.4.5",
+                "twig/twig": "^1.23.1"
+            },
+            "require-dev": {
+                "composer/composer": "dev-master",
+                "phpunit/phpunit": "^4.4.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "NijiDigital\\Settings\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "NijiDigital\\Settings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Composer Plugin for generate the Drupal settings file.",
+            "time": "2017-11-13T06:43:07+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5759,8 +5799,7 @@
                 "source": "http://cgit.drupalcode.org/devel",
                 "issues": "http://drupal.org/project/devel",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
-            },
-            "time": "2017-10-05T09:36:49+00:00"
+            }
         },
         {
             "name": "drupal/vardumper",
