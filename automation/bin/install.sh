@@ -10,7 +10,7 @@ cd ${APP_DIR}
 
 ${DRUSH} site:install niji \
   -y install_configure_form.update_status_module='array(FALSE,FALSE)' || error
-
+exit 1
 # Re-init drupal console.
 ${DRUPAL} init --no-interaction --override --quiet || error
 
