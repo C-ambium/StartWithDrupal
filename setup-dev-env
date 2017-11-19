@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+EXEC_USER_ID=$(id -u)
+EXEC_GROUP_ID=$(id -g)
+
+
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
+
+docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php ./automation/bin/build.sh --mode dev
+
+set +e
+docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php composer prepare-settings
+set -e
+
+docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php ./automation/bin/install.sh
