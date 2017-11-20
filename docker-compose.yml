@@ -63,6 +63,7 @@ services:
       - front
       - back
     labels:
+      - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.frontend.rule=Host:origin.${PROJECT_NAME}.${BASE_DOMAIN}"
 
@@ -77,6 +78,7 @@ services:
     networks:
       - front
     labels:
+      - "traefik.enable=true"
       - "traefik.port=6081"
       - "traefik.frontend.rule=Host:${PROJECT_NAME}.${BASE_DOMAIN}"
 
@@ -96,6 +98,7 @@ services:
       - front
       - back
     labels:
+      - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.frontend.rule=Host:pma.${PROJECT_NAME}.${BASE_DOMAIN}"
 
@@ -105,5 +108,6 @@ services:
       - front
       - back
     labels:
+      - "traefik.enable=true"
       - "traefik.port=8025"
       - "traefik.frontend.rule=Host:mailhog.${PROJECT_NAME}.${BASE_DOMAIN}"
