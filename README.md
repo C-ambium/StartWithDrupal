@@ -1,4 +1,4 @@
-# Arval Site Factory
+# Application Drupal
 
 Ce socle applicatif est totalement découplée de tout hébergement.
 Il peut être utilisé dans un environnement LAMP, tout comme dans un environnement docker par exemple.
@@ -38,13 +38,13 @@ site_name: 'drupal'
 
 `./automation/bin/build.sh`
 
-Ajouter la paramètre `--mode dev` pour une inclure les dépendances de développement. 
+Ajouter la paramètre `--mode dev` pour une inclure les dépendances de développement.
 
 ### Installation
 
 `./automation/bin/install.sh`
 
-Attention, la base de donnée est supprimée lors de chaque installation. 
+Attention, la base de donnée est supprimée lors de chaque installation.
 
 ### Mise à jour
 
