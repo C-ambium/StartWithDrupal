@@ -23,10 +23,10 @@
       ]
     },
     "drupal-settings": {
-        "template-directory": "/settings/templates",
+        "template-directory": "settings/templates",
         "template-file": "settings.env.php.twig",
         "destination-file": "settings.env.php",
-        "parameters-file": "/settings/parameters.env.yml"
+        "parameters-file": "settings/parameters.env.yml"
     },
     "installer-paths": {
       "drush/contrib/{$name}": [
