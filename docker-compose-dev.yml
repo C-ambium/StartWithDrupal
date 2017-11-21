@@ -1,12 +1,5 @@
 version: "3"
 
-networks:
-  front:
-    external:
-      name: ${FRONT_NETWORK}
-  back:
-    driver: bridge
-
 services:
   php:
     volumes:
