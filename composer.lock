@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6e61cff4f1b484e3773ab28153a4e92",
+    "content-hash": "f8366c57c659293b39eeccd0b3d00f82",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -5799,7 +5799,8 @@
                 "source": "http://cgit.drupalcode.org/devel",
                 "issues": "http://drupal.org/project/devel",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
-            }
+            },
+            "time": "2017-10-05T09:36:49+00:00"
         },
         {
             "name": "drupal/vardumper",
