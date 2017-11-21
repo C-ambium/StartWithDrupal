@@ -4,7 +4,12 @@ services:
   php:
     volumes:
       - ./:/var/www/html:cached
+      - ./var/cache/composer:/tmp/cache:cached
 
   apache:
     volumes:
       - ./:/var/www/html:cached
+
+  mariadb:
+    volumes:
+      - ./var/mysql:/var/lib/mysql:cached
