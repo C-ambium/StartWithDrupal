@@ -1,15 +1,22 @@
 version: "3"
 
+volumes:
+  docker-sync:
+    external: true
+  database:
+  composer-cache:
+
 services:
   php:
     volumes:
-      - ./:/var/www/html:cached
-      - ./var/cache/composer:/tmp/cache:cached
+      #- ./:/var/www/html:cached
+      - docker-sync:/var/www/html:nocopy
+      - composer-cache:/tmp/cache:delegated
 
   apache:
     volumes:
-      - ./:/var/www/html:cached
+      - docker-sync:/var/www/html:nocopy
 
   mariadb:
     volumes:
-      - ./var/mysql:/var/lib/mysql:cached
+      - database:/var/lib/mysql:delegated
