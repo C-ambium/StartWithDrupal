@@ -3,6 +3,10 @@
 Ce socle applicatif est totalement découplée de tout hébergement.
 Il peut être utilisé dans un environnement LAMP, tout comme dans un environnement docker par exemple.
 
+**Remarque**: Vous pouvez utiliser docker pour votre de developpement. Cepandant, il faut installer le reverse proxy est créer le network avant de lancer l'ennvironnement.
+Voir: https://gitlab.niji.fr/niji-tools/socles/docker-dev-host
+Ensuite, sur votre machine lancer le script setup-dev-env
+
 ## Paramètres
 
 Par défaut le fichier `parameters.dist.yml` est utilisé.
