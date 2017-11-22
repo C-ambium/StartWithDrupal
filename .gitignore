@@ -21,6 +21,5 @@
 /.idea/
 /builds/
 
-# Ignore container mounted files
-/var/cache
-/var/mysql
+# Ignore docker-sync log dir
+/.docker-sync

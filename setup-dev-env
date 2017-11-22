@@ -9,12 +9,14 @@ EXEC_GROUP_ID=$(id -g)
 
 source .env
 
+nohup docker-sync start > /dev/null 2>&1 &
+
 docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
 
-docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php ./automation/bin/build.sh --mode dev
+docker-compose exec php ./automation/bin/build.sh --mode dev
 
 set +e
-docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php composer prepare-settings
+docker-compose exec php composer prepare-settings
 set -e
 
-docker-compose exec -u ${EXEC_USER_ID}:${EXEC_GROUP_ID} php ./automation/bin/install.sh
+docker-compose exec php ./automation/bin/install.sh
