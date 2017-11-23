@@ -4,7 +4,7 @@ volumes:
   docker-sync:
     external: true
   database:
-  composer-cache:
+  tmp:
 
 services:
   php:
@@ -13,13 +13,12 @@ services:
       PHP_XDEBUG_DEFAULT_ENABLE: 1
       PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
       PHP_XDEBUG_REMOTE_HOST: "0.0.0.0"
-      PHP_XDEBUG_PROFILER_OUTPUT_DIR: /mnt/files/xdebug/profiler
-      PHP_XDEBUG_TRACE_OUTPUT_DIR: /mnt/files/xdebug/traces
+      PHP_XDEBUG_PROFILER_OUTPUT_DIR: /tmp/xdebug/profiler
+      PHP_XDEBUG_TRACE_OUTPUT_DIR: /tmp/xdebug/traces
       PHP_BLACKFIRE: 1
     volumes:
       - docker-sync:/var/www/html:nocopy
-      - composer-cache:/tmp/cache:delegated
-
+      - tmp:/tmp:delegated
   apache:
     volumes:
       - docker-sync:/var/www/html:nocopy

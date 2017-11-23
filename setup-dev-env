@@ -4,9 +4,6 @@ set -e
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-EXEC_USER_ID=$(id -u)
-EXEC_GROUP_ID=$(id -g)
-
 source .env
 
 nohup docker-sync start > /dev/null 2>&1 &
