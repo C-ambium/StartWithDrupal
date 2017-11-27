@@ -58,14 +58,14 @@ services:
       APACHE_LOG_LEVEL: debug
       APACHE_BACKEND_HOST: php
       APACHE_SERVER_ROOT: /var/www/html/web
-      APACHE_SERVER_NAME: ${PROJECT_NAME}.${BASE_DOMAIN}
+      APACHE_SERVER_NAME: ${APP_DOMAIN}
     networks:
       - front
       - back
     labels:
       - "traefik.enable=true"
       - "traefik.port=80"
-      - "traefik.frontend.rule=Host:origin.${PROJECT_NAME}.${BASE_DOMAIN}"
+      - "traefik.frontend.rule=Host:origin.${APP_DOMAIN}"
       - "traefik.docker.network=${FRONT_NETWORK}"
 
   varnish:
@@ -81,13 +81,14 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=6081"
-      - "traefik.frontend.rule=Host:${PROJECT_NAME}.${BASE_DOMAIN}"
+      - "traefik.frontend.rule=Host:${APP_DOMAIN}"
       - "traefik.docker.network=${FRONT_NETWORK}"
 
   redis:
     image: wodby/redis:4.0-2.1.3
     networks:
       - back
+
   pma:
     image: phpmyadmin/phpmyadmin
     environment:
@@ -102,7 +103,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=80"
-      - "traefik.frontend.rule=Host:pma.${PROJECT_NAME}.${BASE_DOMAIN}"
+      - "traefik.frontend.rule=Host:pma.${APP_DOMAIN}"
       - "traefik.docker.network=${FRONT_NETWORK}"
 
   mailhog:
@@ -113,5 +114,5 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=8025"
-      - "traefik.frontend.rule=Host:mailhog.${PROJECT_NAME}.${BASE_DOMAIN}"
+      - "traefik.frontend.rule=Host:mailhog.${APP_DOMAIN}"
       - "traefik.docker.network=${FRONT_NETWORK}"

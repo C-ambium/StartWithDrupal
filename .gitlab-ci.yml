@@ -1,5 +1,3 @@
-
-
 cache:
   key: "$CI_BUILD_NAME"
   untracked: true
@@ -9,20 +7,22 @@ image: anasdox/phpwebbuilder:latest
 stages:
   - build
   - quality-gates
-  - unit-test
-  - package
+  #- unit-test
+  #- package
   - deploy
-  - integration-test
-  - fonctional-test
+  #- integration-test
+  #- fonctional-test
 
 build:
   stage: build
   script:
     - ./automation/bin/build.sh
   artifacts:
-    paths:
-    - .
+    name: "$CI_COMMIT_REF_NAME"
+    untracked: true
     expire_in: 1 week
+    paths:
+      - .
 
 code-sniffer:
   stage: quality-gates
@@ -31,25 +31,76 @@ code-sniffer:
   script:
     - ./automation/bin/code_sniffer.sh
 
-#unit-test:
-#  stage: unit-test
-#  dependencies:
-#    - build
-#  script:
-#    - ./automation/bin/unit-test.sh
+
+deploy_review:
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
+  script:
+    - echo "Deploy a review app"
+  environment:
+    name: review/${CI_COMMIT_REF_NAME}
+    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
+  only:
+    - branches
+  except:
+    - master
+  tags:
+    - ci
+
+stop_review:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "Remove review app"
+  when: manual
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  tags:
+    - ci
 
 deploy-integ:
   stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
   dependencies:
     - build
   environment:
-    name: CI
-    url: http://${CI_PROJECT_NAME}.ci.dalkia.niji.delivery
+    name: integ
+    url: http://${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
   only:
     - master
   tags:
-#    - CI
-#  script:
-#    - docker-compose build
-#    - docker-compose up -d
-#    - docker-compose restart#
+    - ci
+
+deploy_rec:
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
+  script:
+    - echo "Deploy to staging server"
+  environment:
+    name: rec
+    url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
+  when: manual
+  only:
+    - ^release.*
+  tags:
+    - rec
+
+deploy_demo:
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
+  script:
+    - echo "Deploy to production server"
+  environment:
+    name: demo
+    url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
+  when: manual
+  only:
+    - ^release.*
+  tags:
+    - demo

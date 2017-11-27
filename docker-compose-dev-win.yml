@@ -15,14 +15,14 @@ services:
       PHP_XDEBUG_TRACE_OUTPUT_DIR: /tmp/xdebug/traces
       PHP_BLACKFIRE: 1
     volumes:
-      - ./:/var/www/html:cached
+      - ./:/var/www/html
       - tmp:/tmp:delegated
     ports:
       - 9001:9000
 
   apache:
     volumes:
-      - ./:/var/www/html:cached
+      - ./:/var/www/html
 
   mariadb:
     volumes:
