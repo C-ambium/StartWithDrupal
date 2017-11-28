@@ -18,6 +18,8 @@ esac
 if [ $OS_NAME == 'linux' ]; then
     sudo setfacl -dR -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./
     sudo setfacl -R -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./
+elif [ $OS_NAME == 'mac' ]; then
+    sudo dseditgroup -o edit -a $(id -un) -t user $(id -gn 82)
 fi
 
 docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
