@@ -6,3 +6,5 @@ docker-compose exec php ./automation/bin/build.sh --mode dev
 docker-compose exec php composer prepare-settings
 
 docker-compose exec php ./automation/bin/install.sh
+
+docker-compose exec php ./automation/bin/reset_password.sh
