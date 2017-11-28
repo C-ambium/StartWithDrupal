@@ -18,3 +18,5 @@ docker-compose exec -u $(id -u):$(id -g) php composer prepare-settings
 set -e
 
 docker-compose exec -u $(id -u):$(id -g) php ./automation/bin/install.sh
+
+docker-compose exec -u $(id -u):$(id -g) php ./automation/bin/reset_password.sh
