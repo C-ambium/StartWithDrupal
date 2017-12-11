@@ -9,11 +9,11 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface for defining Site entities.
  *
+ * Add get/set methods for your configuration properties here.
+ *
  * @ingroup site_factory
  */
-interface SiteInterface extends  ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
-
-  // Add get/set methods for your configuration properties here.
+interface SiteInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Gets the Site name.

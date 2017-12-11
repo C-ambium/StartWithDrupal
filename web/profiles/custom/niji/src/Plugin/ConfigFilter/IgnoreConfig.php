@@ -13,15 +13,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * To ignore all configuration provided by one module, put this settings into
  * your settings.php file (for example) :
- * @code
- *   $settings['config_export_blacklist_module'] = ['devel', 'webprofiler'];
- * @endcode
+ *
+ * $settings['config_export_blacklist_module'] = ['devel', 'webprofiler'];
  *
  * To ignore all designated configuration, put this settings into your
  * settings.php file (for example) :
- * @code
- *   $settings['config_export_blacklist_config'] = ['webprofiler.config'];
- * @endcode
+ *
+ * $settings['config_export_blacklist_config'] = ['webprofiler.config'];
  *
  * @ConfigFilter(
  *   id = "ignore_config",
@@ -79,9 +77,6 @@ class IgnoreConfig extends ConfigFilterBase implements ContainerFactoryPluginInt
 
   /**
    * Generate a list with configurations to be ignored.
-   *
-   * @param array $ignored_modules
-   *   An array containing the modules list.
    */
   protected function generateIgnoredConfigurations() {
     if (!empty($this->ignoredModules)) {
@@ -110,6 +105,7 @@ class IgnoreConfig extends ConfigFilterBase implements ContainerFactoryPluginInt
    *   The config name.
    *
    * @return bool
+   *   no description
    */
   protected function ignoreMatchName($config_name) {
     return in_array($config_name, $this->ignoredConfig);

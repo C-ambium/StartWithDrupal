@@ -32,7 +32,7 @@ function niji_install_tasks() {
     ],
     'niji_enable_additional_modules' => [
       'display_name' => t('Enable additional modules'),
-      'type' => 'normal'
+      'type' => 'normal',
     ],
   ];
 }
