@@ -5,8 +5,8 @@ cache:
 image: anasdox/phpwebbuilder:latest
 
 stages:
-  - build
   - quality-gates
+  - build
   #- unit-test
   #- package
   - deploy
@@ -23,6 +23,9 @@ build:
     expire_in: 1 week
     paths:
       - .
+  tags:
+    - build
+    .
 
 code-sniffer:
   stage: quality-gates
@@ -30,23 +33,25 @@ code-sniffer:
     - build
   script:
     - ./automation/bin/code_sniffer.sh
+  tags:
+    - build
 
 
 deploy_review:
   stage: deploy
   variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
   script:
     - echo "Deploy a review app"
   environment:
     name: review/${CI_COMMIT_REF_NAME}
-    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
+    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
   only:
     - branches
   except:
     - master
   tags:
-    - ci
+    - run
 
 stop_review:
   stage: deploy
@@ -59,28 +64,46 @@ stop_review:
     name: review/$CI_COMMIT_REF_NAME
     action: stop
   tags:
-    - ci
+    - run
 
-deploy-integ:
+deploy-dev:
   stage: deploy
   variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+  script:
+    - echo "Deploy to dev server: *.${BASE_DOMAIN}"
   dependencies:
     - build
   environment:
     name: integ
-    url: http://${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
+    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
   only:
     - master
   tags:
-    - ci
+    - run
+
+deploy-integ:
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+  script:
+    - echo "Deploy to integ server: *.${BASE_DOMAIN}"
+  dependencies:
+    - build
+  environment:
+    name: integ
+    url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+  only:
+    - master
+  tags:
+    - run
 
 deploy_rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
   script:
-    - echo "Deploy to staging server"
+    - echo "Deploy to rec server: *.${BASE_DOMAIN}"
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -88,14 +111,14 @@ deploy_rec:
   only:
     - ^release.*
   tags:
-    - rec
+    - run
 
 deploy_demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
   script:
-    - echo "Deploy to production server"
+    - echo "Deploy to demo server: *.${BASE_DOMAIN}"
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
