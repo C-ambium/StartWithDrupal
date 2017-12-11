@@ -25,7 +25,6 @@ build:
       - .
   tags:
     - build
-    .
 
 code-sniffer:
   stage: quality-gates
@@ -35,7 +34,6 @@ code-sniffer:
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
-
 
 deploy_review:
   stage: deploy
