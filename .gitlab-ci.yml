@@ -3,8 +3,6 @@ cache:
   untracked: true
 
 image: anasdox/phpwebbuilder:latest
-variables:
-  COMPOSE_PROJECT_NAME: 'drupal'
 
 stages:
   - build
@@ -41,6 +39,7 @@ code-sniffer:
 #  stage: deploy
 #  variables:
 #    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
+#    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_${CI_COMMIT_REF_SLUG}_review'
 #  script:
 #    - "echo \"Deploy to : ${APP_DOMAIN}\""
 #  environment:
@@ -72,6 +71,7 @@ deploy-dev:
   stage: deploy
   variables:
     APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - source /etc/.env && docker-compose up -d
@@ -90,6 +90,7 @@ deploy-integ:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - source /etc/.env && docker-compose up -d
@@ -107,6 +108,7 @@ deploy-rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - source /etc/.env && docker-compose up -d
@@ -123,6 +125,7 @@ deploy-demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - source /etc/.env && docker-compose up -d
