@@ -35,12 +35,12 @@ code-sniffer:
   tags:
     - build
 
-deploy_review:
+deploy-review:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
   script:
-    - "bash echo \"Deploy to : .${BASE_OMAIN}\""
+    - echo "Deploy to : ${BASE_DOMAIN}"
   environment:
     name: review/${CI_COMMIT_REF_NAME}
     url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
@@ -51,7 +51,7 @@ deploy_review:
   tags:
     - review
 
-stop_review:
+stop-review:
   stage: deploy
   variables:
     GIT_STRATEGY: none
@@ -61,6 +61,8 @@ stop_review:
   environment:
     name: review/$CI_COMMIT_REF_NAME
     action: stop
+  only:
+    - branches
   tags:
     - review
 
@@ -69,7 +71,8 @@ deploy-dev:
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
   script:
-    - "bash echo \"Deploy to : .${BASE_OMAIN}\""
+    - echo "Deploy to : ${BASE_DOMAIN}"
+  when: manual
   dependencies:
     - build
   environment:
@@ -85,7 +88,7 @@ deploy-integ:
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
   script:
-    - "bash echo \"Deploy to : .${BASE_OMAIN}\""
+    - echo "Deploy to : ${BASE_DOMAIN}"
   dependencies:
     - build
   environment:
@@ -96,12 +99,12 @@ deploy-integ:
   tags:
     - integ
 
-deploy_rec:
+deploy-rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
   script:
-    - "bash echo \"Deploy to : .${BASE_OMAIN}\""
+    - echo "Deploy to : ${BASE_DOMAIN}"
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -111,12 +114,12 @@ deploy_rec:
   tags:
     - rec
 
-deploy_demo:
+deploy-demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
   script:
-    - "bash echo \"Deploy to : .${BASE_OMAIN}\""
+    - echo "Deploy to : ${BASE_DOMAIN}"
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
