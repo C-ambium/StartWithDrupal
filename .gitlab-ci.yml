@@ -3,6 +3,8 @@ cache:
   untracked: true
 
 image: anasdox/phpwebbuilder:latest
+variables:
+  COMPOSE_PROJECT_NAME: 'drupal'
 
 stages:
   - build
@@ -35,43 +37,44 @@ code-sniffer:
   tags:
     - build
 
-deploy-review:
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-  script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-  environment:
-    name: review/${CI_COMMIT_REF_NAME}
-    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-  only:
-    - branches
-  except:
-    - master
-  tags:
-    - review
-
-stop-review:
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - echo "Remove review app"
-  when: manual
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    action: stop
-  only:
-    - branches
-  tags:
-    - review
+#deploy-review:
+#  stage: deploy
+#  variables:
+#    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
+#  script:
+#    - "echo \"Deploy to : ${APP_DOMAIN}\""
+#  environment:
+#    name: review/${CI_COMMIT_REF_NAME}
+#    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
+#  only:
+#    - branches
+#  except:
+#    - master
+#  tags:
+#    - review
+#
+#stop-review:
+#  stage: deploy
+#  variables:
+#    GIT_STRATEGY: none
+#  script:
+#    - echo "Remove review app"
+#  when: manual
+#  environment:
+#    name: review/$CI_COMMIT_REF_NAME
+#    action: stop
+#  only:
+#    - branches
+#  tags:
+#    - review
 
 deploy-dev:
   stage: deploy
   variables:
-    APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.$${BASE_DOMAIN}'
+    APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   when: manual
   dependencies:
     - build
@@ -89,6 +92,7 @@ deploy-integ:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   dependencies:
     - build
   environment:
@@ -105,6 +109,7 @@ deploy-rec:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -120,6 +125,7 @@ deploy-demo:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
