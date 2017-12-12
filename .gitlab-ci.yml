@@ -28,8 +28,6 @@ build:
 
 code-sniffer:
   stage: quality-gates
-  dependencies:
-    - build
   script:
     - ./automation/bin/code_sniffer.sh
   tags:
