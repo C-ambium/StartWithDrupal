@@ -5,8 +5,8 @@ cache:
 image: anasdox/phpwebbuilder:latest
 
 stages:
-  - quality-gates
   - build
+  - quality-gates
   #- unit-test
   #- package
   - deploy
@@ -28,6 +28,8 @@ build:
 
 code-sniffer:
   stage: quality-gates
+  dependencies:
+    - build
   script:
     - ./automation/bin/code_sniffer.sh
   tags:
