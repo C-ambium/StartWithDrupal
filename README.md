@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.niji.fr/niji-tools/socles/app-drupal-docker/badges/master/pipeline.svg)](https://gitlab.niji.fr/niji-tools/socles/app-drupal-docker/commits/master)
+
 # Application Drupal
 
 Ce socle applicatif est totalement découplée de tout hébergement.

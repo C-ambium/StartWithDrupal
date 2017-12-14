@@ -23,6 +23,8 @@ build:
     expire_in: 1 week
     paths:
       - .
+  tags:
+    - build
 
 code-sniffer:
   stage: quality-gates
@@ -30,57 +32,86 @@ code-sniffer:
     - build
   script:
     - ./automation/bin/code_sniffer.sh
-
-
-deploy_review:
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
-  script:
-    - echo "Deploy a review app"
-  environment:
-    name: review/${CI_COMMIT_REF_NAME}
-    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.ci.${BASE_DOMAIN}
-  only:
-    - branches
-  except:
-    - master
   tags:
-    - ci
+    - build
 
-stop_review:
+#deploy-review:
+#  stage: deploy
+#  variables:
+#    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
+#    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_${CI_COMMIT_REF_SLUG}_review'
+#  script:
+#    - "echo \"Deploy to : ${APP_DOMAIN}\""
+#  environment:
+#    name: review/${CI_COMMIT_REF_NAME}
+#    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
+#  only:
+#    - branches
+#  except:
+#    - master
+#  tags:
+#    - review
+#
+#stop-review:
+#  stage: deploy
+#  variables:
+#    GIT_STRATEGY: none
+#  script:
+#    - echo "Remove review app"
+#  when: manual
+#  environment:
+#    name: review/$CI_COMMIT_REF_NAME
+#    action: stop
+#  only:
+#    - branches
+#  tags:
+#    - review
+
+deploy-dev:
   stage: deploy
   variables:
-    GIT_STRATEGY: none
+    APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
   script:
-    - echo "Remove review app"
+    - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   when: manual
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    action: stop
-  tags:
-    - ci
-
-deploy-integ:
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
   dependencies:
     - build
   environment:
     name: integ
-    url: http://${CI_PROJECT_PATH_SLUG}.ci.${BASE_DOMAIN}
+    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
   only:
     - master
   tags:
-    - ci
+    - dev
 
-deploy_rec:
+deploy-integ:
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
+  script:
+    - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
+  dependencies:
+    - build
+  environment:
+    name: integ
+    url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+  only:
+    - master
+  tags:
+    - integ
+
+deploy-rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
   script:
-    - echo "Deploy to staging server"
+    - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -90,12 +121,14 @@ deploy_rec:
   tags:
     - rec
 
-deploy_demo:
+deploy-demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
   script:
-    - echo "Deploy to production server"
+    - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - source /etc/.env && docker-compose up -d
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
