@@ -1,5 +1,5 @@
 cache:
-  key: "$CI_BUILD_NAME"
+  key: "$CI_COMMIT_REF_NAME"
   untracked: true
 
 image: anasdox/phpwebbuilder:latest
@@ -7,21 +7,13 @@ image: anasdox/phpwebbuilder:latest
 stages:
   - build
   - quality-gates
-  #- unit-test
   - package
   - deploy
-  #- integration-test
-  #- fonctional-test
 
 build:
   stage: build
   script:
     - ./automation/bin/build.sh
-  artifacts:
-    name: "$CI_COMMIT_REF_NAME"
-    expire_in: 1 week
-    paths:
-      - .
   tags:
     - build
 
@@ -43,38 +35,6 @@ publish-artifact:
     - "curl -H\"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}\" -T /tmp/${CI_COMMIT_REF_NAME}.tar.gz https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${CI_COMMIT_REF_NAME}.tar.gz -k"
   tags:
     - build
-
-#deploy-review:
-#  stage: deploy
-#  variables:
-#    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-#    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_${CI_COMMIT_REF_SLUG}_review'
-#  script:
-#    - "echo \"Deploy to : ${APP_DOMAIN}\""
-#  environment:
-#    name: review/${CI_COMMIT_REF_NAME}
-#    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-#  only:
-#    - branches
-#  except:
-#    - master
-#  tags:
-#    - review
-#
-#stop-review:
-#  stage: deploy
-#  variables:
-#    GIT_STRATEGY: none
-#  script:
-#    - echo "Remove review app"
-#  when: manual
-#  environment:
-#    name: review/$CI_COMMIT_REF_NAME
-#    action: stop
-#  only:
-#    - branches
-#  tags:
-#    - review
 
 deploy-dev:
   stage: deploy
