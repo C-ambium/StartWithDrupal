@@ -34,14 +34,13 @@ code-sniffer:
   tags:
     - build
 
-package:
+publish-artifact:
   stage: package
   dependencies:
     - build
   script:
-    - ls -altr
-    - tar --exclude-vcs --exclude='./composer.*' --exclude='*.yml' --exclude='./setup-*' --exclude='./*.md' -zcf ${CI_COMMIT_REF_NAME}.tar.gz .
-    - "curl -H\"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}\" -T ${CI_COMMIT_REF_NAME}.tar.gz https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${CI_COMMIT_REF_NAME}.tar.gz"
+    - tar --exclude-vcs --exclude='composer.*' --exclude='docker*.yml' --exclude='setup-dev*' --exclude='*.md' -zcf /tmp/${CI_COMMIT_REF_NAME}.tar.gz *
+    - "curl -H\"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}\" -T /tmp/${CI_COMMIT_REF_NAME}.tar.gz https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${CI_COMMIT_REF_NAME}.tar.gz -k"
   tags:
     - build
 
