@@ -39,9 +39,9 @@ package:
   dependencies:
     - build
   script:
-    - ls -altr
-    - tar --exclude-vcs --exclude='./composer.*' --exclude='*.yml' --exclude='./setup-*' --exclude='./*.md' -zcf ${$CI_COMMIT_REF_NAME}.tar.gz .
-    - curl -H"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}" -T ${$CI_COMMIT_REF_NAME}.tar.gz "https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${$CI_COMMIT_REF_NAME}.tar.gz"
+    - 'ls -altr'
+    - 'tar --exclude-vcs --exclude='./composer.*' --exclude='*.yml' --exclude='./setup-*' --exclude='./*.md' -zcf ${CI_COMMIT_REF_NAME}.tar.gz .'
+    - 'curl -H"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}" -T ${CI_COMMIT_REF_NAME}.tar.gz "https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${CI_COMMIT_REF_NAME}.tar.gz"'
   tags:
     - build
 
