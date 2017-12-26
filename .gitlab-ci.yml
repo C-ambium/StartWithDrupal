@@ -8,7 +8,7 @@ stages:
   - build
   - quality-gates
   #- unit-test
-  #- package
+  - package
   - deploy
   #- integration-test
   #- fonctional-test
@@ -19,7 +19,6 @@ build:
     - ./automation/bin/build.sh
   artifacts:
     name: "$CI_COMMIT_REF_NAME"
-    untracked: true
     expire_in: 1 week
     paths:
       - .
@@ -32,6 +31,17 @@ code-sniffer:
     - build
   script:
     - ./automation/bin/code_sniffer.sh
+  tags:
+    - build
+
+package:
+  stage: package
+  dependencies:
+    - build
+  script:
+    - ls -altr
+    - tar --exclude-vcs --exclude='./composer.*' --exclude='*.yml' --exclude='./setup-*' --exclude='./*.md' -zcf ${$CI_COMMIT_REF_NAME}.tar.gz .
+    - curl -H"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}" -T ${$CI_COMMIT_REF_NAME}.tar.gz "https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${$CI_COMMIT_REF_NAME}.tar.gz"
   tags:
     - build
 
