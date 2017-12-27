@@ -28,7 +28,8 @@ code-sniffer:
   dependencies:
     - build
   script:
-    - ls -ltra
+    - ls -ltra vendor
+    - ls -ltra vendor/bin
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
