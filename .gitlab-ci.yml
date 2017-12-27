@@ -16,9 +16,10 @@ variables:
 build:
   stage: build
   script:
-    - ./automation/bin/build.sh
+    - ./automation/bin/build.sh --mode dev
   artifacts:
-    untracked: true
+    paths:
+      - ./
     expire_in: 1 week
   tags:
     - build
