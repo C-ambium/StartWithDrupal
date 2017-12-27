@@ -1,6 +1,7 @@
 cache:
   key: "$CI_COMMIT_REF_NAME"
-  untracked: true
+  path:
+    - .
 
 image: anasdox/phpwebbuilder:latest
 
@@ -10,18 +11,25 @@ stages:
   - package
   - deploy
 
+variables:
+  CI_DEBUG_TRACE: "true"
+
 build:
   stage: build
   script:
+
     - ./automation/bin/build.sh
   tags:
     - build
 
 code-sniffer:
   stage: quality-gates
+  variables:
+    GIT_STRATEGY: none
   dependencies:
     - build
   script:
+    - ls -ltra
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
