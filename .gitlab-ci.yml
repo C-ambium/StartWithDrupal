@@ -1,6 +1,6 @@
 cache:
   key: "$CI_COMMIT_REF_NAME"
-  path:
+  paths:
     - .
 
 image: anasdox/phpwebbuilder:latest
