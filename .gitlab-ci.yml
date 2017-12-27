@@ -18,8 +18,7 @@ build:
   script:
     - ./automation/bin/build.sh
   artifacts:
-    paths:
-      - .
+    untracked: true
     expire_in: 1 week
   tags:
     - build
