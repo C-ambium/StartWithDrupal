@@ -17,15 +17,12 @@ variables:
 build:
   stage: build
   script:
-
     - ./automation/bin/build.sh
   tags:
     - build
 
 code-sniffer:
   stage: quality-gates
-  variables:
-    GIT_STRATEGY: none
   dependencies:
     - build
   script:
