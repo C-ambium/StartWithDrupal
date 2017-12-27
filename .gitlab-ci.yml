@@ -1,7 +1,6 @@
 cache:
   key: "$CI_COMMIT_REF_NAME"
-  paths:
-    - .
+  untracked: true
 
 image: anasdox/phpwebbuilder:latest
 
@@ -18,6 +17,10 @@ build:
   stage: build
   script:
     - ./automation/bin/build.sh
+  artifacts:
+    paths:
+      - .
+    expire_in: 1 week
   tags:
     - build
 
