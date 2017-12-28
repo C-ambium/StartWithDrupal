@@ -1,5 +1,5 @@
 cache:
-  key: "$CI_COMMIT_REF_NAME"
+  key: "$CI_COMMIT_REF_SLUG"
   untracked: true
 
 image: anasdox/phpwebbuilder:latest
@@ -7,11 +7,23 @@ image: anasdox/phpwebbuilder:latest
 stages:
   - build
   - quality-gates
-  - package
+  - package-app
+  - package-docker
   - deploy
 
 variables:
   CI_DEBUG_TRACE: "true"
+
+  #To change for each project
+  BASE_DOMAIN: "socles.niji.delivery"
+  ARTIFACTORY_GENERIC_REPO_URI: "https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local"
+  ARTIFACTORY_DOCKER_REGISTRY: "niji-socle-drupal-docker.artifactory.niji.delivery"
+  ARTIFACTORY_USER: "niji-socle"
+  #ARTIFACTORY_PASSWORD: set in gitlab secret
+  PHP_DOCKER_IMAGE_NAME: "niji-socle-drupal-php"
+  PHP_DOCKER_FROM_IMAGE: "wodby/drupal-php:7.1-3.0.0"
+  APACHE_DOCKER_IMAGE_NAME: "niji-socle-drupal-apache"
+  APACHE_DOCKER_FROM_IMAGE: "wodby/php-apache:2.4-2.0.0"
 
 build:
   stage: build
@@ -29,30 +41,62 @@ code-sniffer:
   dependencies:
     - build
   script:
-    - ls -ltra vendor
-    - ls -ltra vendor/bin
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
 
-publish-artifact:
-  stage: package
+package-app-artifact:
+  stage: package-app
   dependencies:
     - build
   script:
-    - tar --exclude-vcs --exclude='composer.*' --exclude='docker*.yml' --exclude='setup-dev*' --exclude='*.md' -zcf /tmp/${CI_COMMIT_REF_NAME}.tar.gz *
-    - "curl -H\"Authorization: Bearer ${ARTIFACTORY_ACCESS_TOKEN}\" -T /tmp/${CI_COMMIT_REF_NAME}.tar.gz https://artifactory.niji.delivery/artifactory/niji-socle-drupal-local/${CI_COMMIT_REF_NAME}.tar.gz -k"
+    - tar --exclude-vcs --exclude='composer.*' --exclude='docker*.yml' --exclude='setup-dev*' --exclude='*.md' -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
+    - curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz ${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz
   tags:
     - build
+
+package-docker-php-artifact:
+  stage: package-docker
+  image: docker:git
+  services:
+  - docker:dind
+  script:
+  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
+  - docker build -t ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+      --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE}
+      --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN}
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz
+      --quiet
+      .
+  - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  - docker push $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+
+package-docker-apache-artifact:
+  stage: package-docker
+  image: docker:git
+  services:
+  - docker:dind
+  script:
+  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
+  - docker build -t ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
+      --build-arg FROM_IMAGE=${APACHE_DOCKER_FROM_IMAGE} \
+      --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN} \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --quiet \
+      .
+  - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  - docker push $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+
 
 deploy-dev:
   stage: deploy
   variables:
     APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
+
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   when: manual
   dependencies:
     - build
@@ -71,7 +115,7 @@ deploy-integ:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   dependencies:
     - build
   environment:
@@ -89,7 +133,7 @@ deploy-rec:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -106,7 +150,7 @@ deploy-demo:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}

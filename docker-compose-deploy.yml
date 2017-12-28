@@ -1,0 +1,14 @@
+version: "3"
+
+volumes:
+  shared:
+
+services:
+  php:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+    volumes:
+      - shared:/var/www/html/web/sites/default/files
+  apache:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+    volumes:
+      - shared:/var/www/html/web/sites/default/files:ro
