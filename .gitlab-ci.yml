@@ -50,8 +50,21 @@ package-app-artifact:
   dependencies:
     - build
   script:
-    - tar --exclude-vcs --exclude='composer.*' --exclude='docker*.yml' --exclude='setup-dev*' --exclude='*.md' -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
-    - curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz ${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz
+    - |
+      tar \
+          --exclude-vcs \
+          --exclude='composer.*' \
+          --exclude='docker*.yml' \
+          --exclude='setup-dev*' \
+          --exclude='*.md' \
+          -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
+
+    - |
+      curl \
+          -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+          -H "X-Checksum-md5:`md5sum /tmp/${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
+          -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz \
+          ${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz
   tags:
     - build
 
@@ -62,14 +75,17 @@ package-docker-php-artifact:
   - docker:dind
   script:
   - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
-  - docker build -t ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-      --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE}
-      --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN}
-      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz
-      --quiet
+  - |
+    docker build -t ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
+      --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE} \
+      --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN} \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --quiet \
       .
   - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  - docker push $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  tags:
+    - build
 
 package-docker-apache-artifact:
   stage: package-docker
@@ -78,22 +94,23 @@ package-docker-apache-artifact:
   - docker:dind
   script:
   - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
-  - docker build -t ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
+  - |
+    docker build -t ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
       --build-arg FROM_IMAGE=${APACHE_DOCKER_FROM_IMAGE} \
       --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN} \
       --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
       --quiet \
       .
   - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  - docker push $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-
+  - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  tags:
+    - build
 
 deploy-dev:
   stage: deploy
   variables:
     APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
-
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
