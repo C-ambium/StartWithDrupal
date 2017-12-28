@@ -4,11 +4,28 @@ volumes:
   shared:
 
 services:
+
+  mariadb:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/wodby/mariadb:10.1-2.3.5
+
   php:
     image: ${ARTIFACTORY_DOCKER_REGISTRY}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
     volumes:
       - shared:/var/www/html/web/sites/default/files
+
   apache:
     image: ${ARTIFACTORY_DOCKER_REGISTRY}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
     volumes:
       - shared:/var/www/html/web/sites/default/files:ro
+
+  varnish:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/wodby/drupal-varnish:4.1-2.2.0
+
+  redis:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/wodby/redis:4.0-2.1.3
+
+  pma:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/phpmyadmin/phpmyadmin
+
+  mailhog:
+    image: ${ARTIFACTORY_DOCKER_REGISTRY}/mailhog/mailhog
