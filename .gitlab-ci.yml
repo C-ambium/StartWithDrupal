@@ -71,8 +71,6 @@ package-app-artifact:
 package-docker-php-artifact:
   stage: package-docker
   image: docker:latest
-  services:
-  - docker:dind
   script:
   - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
   - |
@@ -91,8 +89,6 @@ package-docker-php-artifact:
 package-docker-apache-artifact:
   stage: package-docker
   image: docker:latest
-  services:
-  - docker:dind
   script:
   - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
   - |
@@ -115,6 +111,7 @@ deploy-dev:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   when: manual
   dependencies:
@@ -134,6 +131,7 @@ deploy-integ:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   dependencies:
     - build
@@ -152,6 +150,7 @@ deploy-rec:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   environment:
     name: rec
@@ -169,6 +168,7 @@ deploy-demo:
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
   environment:
     name: demo
