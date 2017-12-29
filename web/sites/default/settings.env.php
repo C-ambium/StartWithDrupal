@@ -3,10 +3,10 @@
 # Settings.
 //$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
 //$settings['cache']['default'] = 'cache.backend.null';
-
+$settings['extension_discovery_scan_tests'] = TRUE;
 $settings['file_chmod_directory'] = 0775;
 $settings['file_chmod_file'] = 0664;
-$settings['hash_salt'] = '0vHzIm0vnM85NWN0NPhV4IC90zKQKcqaMiFDEqV2IIYZBCug47RVRr5aiFo__Q37cp3FZEm7IQ';
+$settings['hash_salt'] = 'e-CQHqybWcnrbIQ_p1ZmsdMz32Xf7wiJJUJw-NXpwK5Rgcs5KvsOoN90hASE-iotVub33l_nWQ';
 
 # Redis cache
 if (constant("MAINTENANCE_MODE") != 'install') {
@@ -22,6 +22,27 @@ if (constant("MAINTENANCE_MODE") != 'install') {
   $settings['cache']['bins']['config'] = 'cache.backend.chainedfast';
 }
 
+// Additional module to enable during installation.
+$settings['additional_modules'] = [
+  'devel',
+  'kint',
+  'vardumper',
+  'vardumper_console',
+  'webprofiler',
+];
+
+// Custom settings to ignore some configuration
+// provided by modules on export.
+$settings['config_export_blacklist_module'] = [
+  'devel',
+  'kint',
+  'vardumper',
+  'vardumper_console',
+  'webprofiler',
+];
+
+// Custom settings to ignore some configuration on export.
+$settings['config_export_blacklist_config'] = null;
 
 # Databases.
 $databases['default']['default'] = array(
@@ -37,15 +58,9 @@ $databases['default']['default'] = array(
 );
 
 # Override config entities.
-$config['system.performance']['cache']['page']['use_internal'] = TRUE;
+$config['system.logging']['error_level'] = 'verbose';
 $config['system.performance']['css']['preprocess'] = TRUE;
-$config['system.performance']['css']['gzip'] = TRUE;
 $config['system.performance']['js']['preprocess'] = TRUE;
-$config['system.performance']['js']['gzip'] = TRUE;
-$config['system.performance']['response']['gzip'] = TRUE;
-$config['views.settings']['ui']['show']['sql_query']['enabled'] = FALSE;
-$config['views.settings']['ui']['show']['performance_statistics'] = FALSE;
-$config['system.logging']['error_level'] = 'none';
 $config['system.performance']['cache.page.max_age'] = 31536000;
 
 $settings['trusted_host_patterns'] = [
