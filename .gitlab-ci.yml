@@ -70,7 +70,7 @@ package-app-artifact:
 
 package-docker-php-artifact:
   stage: package-docker
-  image: docker:git
+  image: docker:latest
   services:
   - docker:dind
   script:
@@ -81,7 +81,7 @@ package-docker-php-artifact:
       --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN} \
       --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
       --quiet \
-      .
+      ./automation/docker
   - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   tags:
@@ -89,7 +89,7 @@ package-docker-php-artifact:
 
 package-docker-apache-artifact:
   stage: package-docker
-  image: docker:git
+  image: docker:latest
   services:
   - docker:dind
   script:
@@ -100,7 +100,7 @@ package-docker-apache-artifact:
       --build-arg ARTIFACTORY_ACCESS_TOKEN=${ARTIFACTORY_ACCESS_TOKEN} \
       --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
       --quiet \
-      .
+      ./automation/docker
   - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   tags:
