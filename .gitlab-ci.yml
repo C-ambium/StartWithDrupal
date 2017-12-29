@@ -78,6 +78,7 @@ package-docker-php-artifact:
       --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
       --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
       --quiet \
+      --force-rm \
       ./automation/docker
   - docker tag ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
@@ -96,6 +97,7 @@ package-docker-apache-artifact:
       --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
       --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_REPO_URI}/${CI_COMMIT_REF_SLUG}.tar.gz \
       --quiet \
+      --force-rm \
       ./automation/docker
   - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} $ARTIFACTORY_DOCKER_REGISTRY/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   - docker push ${ARTIFACTORY_DOCKER_REGISTRY}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
