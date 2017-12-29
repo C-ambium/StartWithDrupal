@@ -110,8 +110,8 @@ package-docker-apache-artifact:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
-    - source /etc/.env && docker-compose exec php ./automation/bin/install.sh
-    - source /etc/.env && docker-compose exec php ./automation/bin/reset_password.sh
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml exec php ./automation/bin/install.sh
+    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml exec php ./automation/bin/reset_password.sh
 
 deploy-dev:
   <<: *job-deploy-script-definition
