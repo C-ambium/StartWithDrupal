@@ -68,10 +68,10 @@ services:
       - front
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:origin.${APP_DOMAIN}"
-      - "traefik.docker.network=${FRONT_NETWORK}"
+      traefik.enable: true
+      traefik.port: 80
+      traefik.frontend.rule: "Host:origin.${APP_DOMAIN}"
+      traefik.docker.network: ${FRONT_NETWORK}
 
   varnish:
     container_name: ${COMPOSE_PROJECT_NAME}_varnish
@@ -85,10 +85,10 @@ services:
     networks:
       - front
     labels:
-      - "traefik.enable=true"
-      - "traefik.port=6081"
-      - "traefik.frontend.rule=Host:${APP_DOMAIN}"
-      - "traefik.docker.network=${FRONT_NETWORK}"
+      traefik.enable: true
+      traefik.port: 6081
+      traefik.frontend.rule: "Host:${APP_DOMAIN}"
+      traefik.docker.network: ${FRONT_NETWORK}
 
   redis:
     container_name: ${COMPOSE_PROJECT_NAME}_redis
@@ -109,10 +109,10 @@ services:
       - front
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:pma.${APP_DOMAIN}"
-      - "traefik.docker.network=${FRONT_NETWORK}"
+      traefik.enable: true
+      traefik.port: 80
+      traefik.frontend.rule: "Host:pma.${APP_DOMAIN}"
+      traefik.docker.network: ${FRONT_NETWORK}
 
   mailhog:
     container_name: ${COMPOSE_PROJECT_NAME}_mailhog
@@ -121,7 +121,7 @@ services:
       - front
       - back
     labels:
-      - "traefik.enable=true"
-      - "traefik.port=8025"
-      - "traefik.frontend.rule=Host:mailhog.${APP_DOMAIN}"
-      - "traefik.docker.network=${FRONT_NETWORK}"
+      traefik.enable: true
+      traefik.port: 8025
+      traefik.frontend.rule: "Host:mailhog.${APP_DOMAIN}"
+      traefik.docker.network: ${FRONT_NETWORK}
