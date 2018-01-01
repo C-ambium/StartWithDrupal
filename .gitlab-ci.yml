@@ -25,22 +25,12 @@ variables:
   APACHE_DOCKER_IMAGE_NAME: "niji-socle-drupal-apache"
   APACHE_DOCKER_FROM_IMAGE: "${ARTIFACTORY_DOCKER_REGISTRY}/wodby/php-apache:2.4-2.0.0"
 
-build:
-  stage: build
-  script:
-    - ./automation/bin/build.sh --mode dev
-  artifacts:
-    paths:
-      - ./
-    expire_in: 1 week
-  tags:
-    - build
-
 code-sniffer:
   stage: quality-gates
   dependencies:
     - build
   script:
+    - ./automation/bin/build.sh --mode dev
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
@@ -50,6 +40,7 @@ package-app-artifact:
   dependencies:
     - build
   script:
+    - ./automation/bin/build.sh
     - printf "{\"time\":\"%s\",\"hash\":\"%s\",\"tag\":\"%s\"}" `date -u +%Y-%m-%dT%H:%M:%SZ` ${CI_COMMIT_SHA} ${CI_COMMIT_REF_SLUG} > ./web/version.json
     - |
       tar \
