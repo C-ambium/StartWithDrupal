@@ -22,28 +22,6 @@ if (constant("MAINTENANCE_MODE") != 'install') {
   $settings['cache']['bins']['config'] = 'cache.backend.chainedfast';
 }
 
-// Additional module to enable during installation.
-$settings['additional_modules'] = [
-  'devel',
-  'kint',
-  'vardumper',
-  'vardumper_console',
-  'webprofiler',
-];
-
-// Custom settings to ignore some configuration
-// provided by modules on export.
-$settings['config_export_blacklist_module'] = [
-  'devel',
-  'kint',
-  'vardumper',
-  'vardumper_console',
-  'webprofiler',
-];
-
-// Custom settings to ignore some configuration on export.
-$settings['config_export_blacklist_config'] = null;
-
 # Databases.
 $databases['default']['default'] = array(
     'driver' => 'mysql',
