@@ -96,10 +96,10 @@ package-docker-apache-artifact:
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
-    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php  apache
+    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php apache
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
-    - source /etc/.env && docker-compose exec php ./automation/bin/install.sh
-    - source /etc/.env && docker-compose exec php ./automation/bin/reset_password.sh
+    #- source /etc/.env && docker-compose exec php ./automation/bin/install.sh
+    #- source /etc/.env && docker-compose exec php ./automation/bin/reset_password.sh
 
 deploy-dev:
   <<: *job-deploy-script-definition
@@ -121,7 +121,7 @@ deploy-integ:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_integ
   environment:
     name: integ
     url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
@@ -135,7 +135,7 @@ deploy-rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_rec
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -150,7 +150,7 @@ deploy-demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_demo
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
