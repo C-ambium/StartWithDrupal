@@ -42,6 +42,7 @@ package-app-artifact:
           --exclude-vcs \
           --exclude='docker*.yml' \
           --exclude='setup-dev*' \
+          --exclude='settings.local.php' \
           -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
 
     - |
