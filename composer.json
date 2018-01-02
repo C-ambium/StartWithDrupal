@@ -99,7 +99,7 @@
     "drupal/config_filter": "~1.0",
     "drupal/console": "~1.0",
     "drupal/core": "~8.4",
-    "drupal/redis": "1.x-dev",
+    "drupal/redis": "1.0-rc2",
     "drush/drush": "~9.0",
     "niji-digital/drupal-settings": "^1.0"
   },
