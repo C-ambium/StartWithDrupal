@@ -10,7 +10,7 @@ networks:
 services:
 
   mariadb:
-    container_name: ${COMPOSE_PROJECT_NAME}_mariadb
+    container_name: ${APP_INSTANCE_NAME}_mariadb
     image: wodby/mariadb:10.1-2.3.5
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -21,7 +21,7 @@ services:
       - back
 
   php:
-    container_name: ${COMPOSE_PROJECT_NAME}_php
+    container_name: ${APP_INSTANCE_NAME}_php
     image: wodby/drupal-php:7.1-3.0.0
     environment:
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
@@ -36,7 +36,7 @@ services:
     networks:
       - back
 #  npm:
-#    container_name: ${COMPOSE_PROJECT_NAME}_npm
+#    container_name: ${APP_INSTANCE_NAME}_npm
 #    image: wodby/node
 #    volumes_from:
 #      - php
@@ -44,7 +44,7 @@ services:
 #    command: npm install
 #
 #  gulp:
-#    container_name: ${COMPOSE_PROJECT_NAME}_gulp
+#    container_name: ${APP_INSTANCE_NAME}_gulp
 #    image: wodby/node
 #    volumes_from:
 #      - php
@@ -55,13 +55,13 @@ services:
 #    command: gulp watch
 
   apache:
-    container_name: ${COMPOSE_PROJECT_NAME}_apache
+    container_name: ${APP_INSTANCE_NAME}_apache
     image: wodby/php-apache:2.4-2.0.0
     depends_on:
       - php
     environment:
       APACHE_LOG_LEVEL: debug
-      APACHE_BACKEND_HOST: ${COMPOSE_PROJECT_NAME}_php
+      APACHE_BACKEND_HOST: ${APP_INSTANCE_NAME}_php
       APACHE_SERVER_ROOT: /var/www/html/web
       APACHE_SERVER_NAME: ${APP_DOMAIN}
     networks:
@@ -74,13 +74,13 @@ services:
       traefik.docker.network: "${FRONT_NETWORK}"
 
   varnish:
-    container_name: ${COMPOSE_PROJECT_NAME}_varnish
+    container_name: ${APP_INSTANCE_NAME}_varnish
     image: wodby/drupal-varnish:4.1-2.2.0
     depends_on:
       - apache
     environment:
       VARNISH_SECRET: secret
-      VARNISH_BACKEND_HOST: ${COMPOSE_PROJECT_NAME}_apache
+      VARNISH_BACKEND_HOST: ${APP_INSTANCE_NAME}_apache
       VARNISH_BACKEND_PORT: 80
     networks:
       - front
@@ -91,16 +91,16 @@ services:
       traefik.docker.network: "${FRONT_NETWORK}"
 
   redis:
-    container_name: ${COMPOSE_PROJECT_NAME}_redis
+    container_name: ${APP_INSTANCE_NAME}_redis
     image: wodby/redis:4.0-2.1.3
     networks:
       - back
 
   pma:
-    container_name: ${COMPOSE_PROJECT_NAME}_pma
+    container_name: ${APP_INSTANCE_NAME}_pma
     image: phpmyadmin/phpmyadmin
     environment:
-      PMA_HOST: ${COMPOSE_PROJECT_NAME}_mariadb
+      PMA_HOST: ${APP_INSTANCE_NAME}_mariadb
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       PHP_UPLOAD_MAX_FILESIZE: 1G
@@ -115,7 +115,7 @@ services:
       traefik.docker.network: "${FRONT_NETWORK}"
 
   mailhog:
-    container_name: ${COMPOSE_PROJECT_NAME}_mailhog
+    container_name: ${APP_INSTANCE_NAME}_mailhog
     image: mailhog/mailhog
     networks:
       - front

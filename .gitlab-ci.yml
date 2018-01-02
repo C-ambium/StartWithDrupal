@@ -105,8 +105,8 @@ deploy-dev:
   <<: *job-deploy-script-definition
   stage: deploy
   variables:
-    APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_dev
   when: manual
   environment:
     name: integ
@@ -121,7 +121,7 @@ deploy-integ:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_integ
+    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_integ
   environment:
     name: integ
     url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
@@ -135,7 +135,7 @@ deploy-rec:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_rec
+    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_rec
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
@@ -150,7 +150,7 @@ deploy-demo:
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_demo
+    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_demo
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
