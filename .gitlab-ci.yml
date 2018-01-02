@@ -108,8 +108,6 @@ deploy-dev:
     APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
   when: manual
-  dependencies:
-    - build
   environment:
     name: integ
     url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
@@ -124,8 +122,6 @@ deploy-integ:
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
     COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
-  dependencies:
-    - build
   environment:
     name: integ
     url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
