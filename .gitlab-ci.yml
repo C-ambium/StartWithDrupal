@@ -1,7 +1,3 @@
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  untracked: true
-
 image: anasdox/phpwebbuilder:latest
 
 stages:
