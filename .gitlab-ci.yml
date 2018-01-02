@@ -5,7 +5,6 @@ cache:
 image: anasdox/phpwebbuilder:latest
 
 stages:
-  - build
   - quality-gates
   - package-app
   - package-docker
@@ -27,8 +26,6 @@ variables:
 
 code-sniffer:
   stage: quality-gates
-  dependencies:
-    - build
   script:
     - ./automation/bin/build.sh --mode dev
     - ./automation/bin/code_sniffer.sh
@@ -37,8 +34,6 @@ code-sniffer:
 
 package-app-artifact:
   stage: package-app
-  dependencies:
-    - build
   script:
     - ./automation/bin/build.sh
     - printf "{\"time\":\"%s\",\"hash\":\"%s\",\"tag\":\"%s\"}" `date -u +%Y-%m-%dT%H:%M:%SZ` ${CI_COMMIT_SHA} ${CI_COMMIT_REF_SLUG} > ./web/version.json
@@ -101,6 +96,7 @@ package-docker-apache-artifact:
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
+    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php  pache
     - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
     - source /etc/.env && docker-compose exec php ./automation/bin/install.sh
     - source /etc/.env && docker-compose exec php ./automation/bin/reset_password.sh
