@@ -41,6 +41,8 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
       REDIS_HOST: ${REDIS_HOST}
+      APP_MODE: ${APP_MODE}
+      APP_HASH_SALT: ${APP_HASH_SALT}
     networks:
       - back
 #  npm:
