@@ -101,21 +101,6 @@ package-docker-apache-artifact:
     - source /etc/.env && docker-compose exec -T php ./automation/bin/install.sh
     - source /etc/.env && docker-compose exec -T php ./automation/bin/reset_password.sh
 
-deploy-dev:
-  <<: *job-deploy-script-definition
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
-    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_dev
-  when: manual
-  environment:
-    name: integ
-    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
-  only:
-    - master
-  tags:
-    - dev
-
 deploy-integ:
   <<: *job-deploy-script-definition
   stage: deploy
@@ -129,6 +114,21 @@ deploy-integ:
     - master
   tags:
     - integ
+
+deploy-dev:
+  <<: *job-deploy-script-definition
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+    APP_INSTANCE_NAME: ${CI_PROJECT_PATH_SLUG}_dev
+  when: manual
+  environment:
+    name: dev
+    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+  only:
+    - master
+  tags:
+    - dev
 
 deploy-rec:
   <<: *job-deploy-script-definition
