@@ -92,10 +92,10 @@ package-docker-apache-artifact:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
     - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_REGISTRY}
     - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php apache
-    - source /etc/.env && docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
-    - source /etc/.env && docker-compose exec -T php bash -c './automation/bin/wait-for.sh ${DB_HOST}:3306 --timeout=60 -- echo "mariadb is ready"'
-    - source /etc/.env && docker-compose exec -T php ./automation/bin/install.sh
-    - source /etc/.env && docker-compose exec -T php ./automation/bin/reset_password.sh
+    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
+    - docker-compose exec -T php bash -c './automation/bin/wait-for.sh ${DB_HOST}:3306 --timeout=60 -- echo "mariadb is ready"'
+    - docker-compose exec -T php ./automation/bin/install.sh
+    - docker-compose exec -T php ./automation/bin/reset_password.sh
 
 deploy-integ:
   <<: *job-deploy-script-definition
