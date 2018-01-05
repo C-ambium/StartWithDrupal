@@ -99,3 +99,36 @@ Attention, la base de donnée est supprimée lors de chaque installation.
 ### Reset password
 
 `./automation/bin/reset_password.sh`
+
+
+# Comment tester le deploiement on mode run
+
+## Initialiser l'environnement
+
+
+Lancer les commandes suiventes, cela permet d'arrêter l'envirennment en mode dev et s'authentifier à votre registery artifactory
+
+```bash
+docker-compose down
+...
+export ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI="niji-socle-drupal-docker.artifactory.niji.delivery"
+export PHP_DOCKER_IMAGE_NAME="niji-socle-drupal-php"
+export APACHE_DOCKER_IMAGE_NAME="niji-socle-drupal-apache"
+export CI_COMMIT_REF_SLUG="master"
+export APP_INSTANCE_NAME=test-drupal
+export APP_DOMAIN=integ.socles.niji.delivery
+
+docker login ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
+Username: niji-socle
+Password:
+Login Succeeded
+```
+
+Ensuite, lancer l'environment en mode run:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
+```
+
+Enfin, il nous reste l'installation:
+```
