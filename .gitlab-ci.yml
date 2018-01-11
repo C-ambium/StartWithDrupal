@@ -40,6 +40,7 @@ package-app-artifact:
           -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
           -H "X-Checksum-md5:`md5sum /tmp/${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
           -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz \
+          --fail \
           ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz
   tags:
     - build
