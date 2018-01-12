@@ -41,32 +41,7 @@ sudo setfacl -R -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./
 
 ## Paramètres
 
-Par défaut le fichier `parameters.dist.yml` est utilisé.
 
-Pour définir ses propres paramètres, copier le fichier `parameters.dist.yml` en `parameters.yml` et modifier les paramètres
-
-Les paramètres par défaut sont :
-
-```yaml
-additional_modules: &additional_modules
-  - 'devel'
-  - 'kint'
-  - 'vardumper'
-  - 'vardumper_console'
-  - 'webprofiler'
-cache_maxage: '31536000'
-config_export_blacklist_module: *additional_modules
-config_export_blacklist_config: 'null'
-css_preprocess: 'TRUE'
-db_host: 'mariadb'
-db_name: 'drupal'
-db_pass: 'drupal'
-db_user: 'drupal'
-error_level: 'verbose'
-js_preprocess: 'TRUE'
-redis_host: 'redis'
-site_name: 'drupal'
-```
 
 ## Installation / Mise à jour
 
@@ -131,4 +106,7 @@ docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
 ```
 
 Enfin, il nous reste l'installation:
+
+```bash
+docker-compose exec php ./automation/bin/install.sh
 ```
