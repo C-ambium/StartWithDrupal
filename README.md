@@ -87,11 +87,11 @@ Lancer les commandes suiventes, cela permet d'arrêter l'envirennment en mode de
 docker-compose down
 ...
 export ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI="niji-socle-drupal-docker.artifactory.niji.delivery"
-export PHP_DOCKER_IMAGE_NAME="niji-socle-drupal-php"
-export APACHE_DOCKER_IMAGE_NAME="niji-socle-drupal-apache"
+export PHP_DOCKER_IMAGE_NAME="niji-tools-socles-app-drupal-docker-php"
+export APACHE_DOCKER_IMAGE_NAME="niji-tools-socles-app-drupal-docker-apache"
 export CI_COMMIT_REF_SLUG="master"
-export APP_INSTANCE_NAME=test-drupal
-export APP_DOMAIN=integ.socles.niji.delivery
+export COMPOSE_PROJECT_NAME="test"
+export APP_DOMAIN=test.socles.niji.delivery
 
 docker login ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
 Username: niji-socle
