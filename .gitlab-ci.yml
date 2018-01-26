@@ -136,7 +136,7 @@ deploy-rec:
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
   when: manual
   only:
-    - ^release.*
+    - /^release.*/
   tags:
     - rec
 
@@ -151,6 +151,6 @@ deploy-demo:
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
   when: manual
   only:
-    - ^release.*
+    - /^release.*/
   tags:
     - demo
