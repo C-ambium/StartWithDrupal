@@ -8,7 +8,7 @@ PROJECT_DIR=${DIR}/../..
 APP_DIR=${PROJECT_DIR}/web
 DRUSH=${PROJECT_DIR}/vendor/bin/drush
 DRUPAL=${PROJECT_DIR}/vendor/bin/drupal
-PHPCS=${PROJECT_DIR}/vendor/bin/phpcs
+PHPCS=phpcs
 
 function error {
     echo -e "\033[31m$1\033[00m"

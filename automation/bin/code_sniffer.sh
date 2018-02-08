@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd "$( dirname "$0" )"
 
 echo "Loading common file"
-source .common
+. ./.common
 
-${PHPCS} --config-set installed_paths ${APP_DIR}/modules/contrib/coder/coder_sniffer/
+${PHPCS} --config-set ignore_warnings_on_exit 1
 
 ${PHPCS} \
 --standard=Drupal,DrupalPractice \
