@@ -44,6 +44,10 @@ package-app-artifact:
           ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz
   tags:
     - build
+  only:
+    - master
+    - /^develop.*/
+    - /^release.*/
 
 package-docker-php-artifact:
   stage: package-docker
@@ -64,6 +68,10 @@ package-docker-php-artifact:
   - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   tags:
     - build
+  only:
+    - master
+    - /^develop.*/
+    - /^release.*/
 
 package-docker-apache-artifact:
   stage: package-docker
@@ -84,6 +92,10 @@ package-docker-apache-artifact:
   - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   tags:
     - build
+  only:
+    - master
+    - /^develop.*/
+    - /^release.*/
 
 # https://docs.gitlab.com/ce/ci/yaml/README.html#special-yaml-features
 .job-deploy-script-template : &job-deploy-script-definition
