@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-cd "$( dirname "$0" )"
-
-echo "Loading common file"
-. ./.common
+DIR=$( cd "$( dirname "$0" )" && pwd )
+cd ${DIR}
+PROJECT_DIR=${DIR}/../..
+APP_DIR=${PROJECT_DIR}/web
 
 ${PHPCS} --config-set ignore_warnings_on_exit 1
 
