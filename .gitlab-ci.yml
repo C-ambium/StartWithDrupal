@@ -46,7 +46,6 @@ package-app-artifact:
     - build
   only:
     - master
-    - /^develop.*/
     - /^release.*/
 
 package-docker-php-artifact:
@@ -70,7 +69,6 @@ package-docker-php-artifact:
     - build
   only:
     - master
-    - /^develop.*/
     - /^release.*/
 
 package-docker-apache-artifact:
@@ -94,7 +92,6 @@ package-docker-apache-artifact:
     - build
   only:
     - master
-    - /^develop.*/
     - /^release.*/
 
 # https://docs.gitlab.com/ce/ci/yaml/README.html#special-yaml-features
