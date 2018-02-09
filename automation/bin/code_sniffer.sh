@@ -4,7 +4,6 @@ DIR=$( cd ${0%/*} && pwd -P )
 cd ${DIR}
 PROJECT_DIR=${DIR}/../..
 APP_DIR=${PROJECT_DIR}/web
-phpcs --config-set ignore_warnings_on_exit 1
 
 phpcs \
 --standard=Drupal,DrupalPractice \
