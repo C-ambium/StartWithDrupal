@@ -39,9 +39,31 @@ sudo setfacl -R -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./
 
 **Sources**: https://github.com/wodby/docker4drupal/blob/master/docs/permissions.md
 
+
+## Artifactory
+
+Après avoir fait une demande de creation repos, vous avez les informations suivantes :
+
+```
+Add to gitlab secret variables :
+
+ARTIFACTORY_GENERIC_LOCAL_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic
+ARTIFACTORY_GENERIC_LOCAL_CLIENT_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic-client
+ARTIFACTORY_DOCKER_LOCAL_CLIENT_REGISTERY_URI: niji-socles-docker-client.artifactory.niji.delivery
+ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI: niji-socles-virtual-docker.artifactory.niji.delivery
+ARTIFACTORY_USER: niji-socles-publisher
+ARTIFACTORY_PASSWORD: SuQkJoZP5
+
+Send to the client for delivery :
+
+ARTIFACTORY_URL: https://artifactory.niji.delivery
+ARTIFACTORY_DOCKER_REGISTERY_URI: niji-socles-docker-client.artifactory.niji.delivery
+ARTIFACTORY_GENERIC_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic-client
+ARTIFACTORY_USER: niji-socles-client
+ARTIFACTORY_PASSWORD: m6t3EdzYGZP
+```
+
 ## Paramètres
-
-
 
 ## Installation / Mise à jour
 

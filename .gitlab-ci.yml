@@ -98,6 +98,7 @@ package-docker-apache-artifact:
 .job-deploy-script-template : &job-deploy-script-definition
   script:
     - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - cp .env.dist .env
     - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
     - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php apache
     - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d

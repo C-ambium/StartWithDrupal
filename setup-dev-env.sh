@@ -4,6 +4,10 @@ set -e
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+if [ ! -f .env ]; then
+    cp .env.dist .env
+fi
+
 source .env
 
 OS_INFORMATION="$(uname -s)"
@@ -21,6 +25,7 @@ if [ $OS_NAME == 'linux' ]; then
 elif [ $OS_NAME == 'mac' ]; then
     sudo dseditgroup -o edit -a $(id -un) -t user $(id -gn 82)
 fi
+
 
 docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
 
