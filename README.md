@@ -16,13 +16,59 @@ Ci-dessous comment lancer votre environnement de developpement
 Sur votre environnement Linux ou MAC OS:
 
 ```bash
-./setup-dev-env.sh
+make setup-dev
 ```
 
 Sur votre machine windows:
 
 ```Powershell
 .\setup-dev-env.bat
+```
+
+## Lignes de commandes
+
+Un certain nombre d'outils accessibles en ligne de commande sont disponible par l'intermédiaire d'un Makefile à la racine, qui peut être complété selon les besoins de chaque projet.
+
+Pour lister l'ensemble des commandes disponibles, il suffit d'executer la commande:
+
+```bash
+make
+```
+
+Les commandes s'exécutent comme suit:
+
+```bash
+make [commande]
+``` 
+
+Liste des commandes par défaut:
+
+```bash
+ Project
+ -------
+
+build                          Build project dependencies
+build-dev                      Build project dependencies for development
+install                        Install and start the project
+setup                          Install and start the project for other environments
+setup-dev                      Install and start the project for development
+reset                          Stop and start a fresh install of the project
+start                          Start the project
+stop                           Stop the project
+clean                          Stop the project and remove generated files
+console                        Open a console in the passed container (e.g make console php)
+
+ Utils
+ -----
+
+logs                           Show drupal logs
+cr                             Clear the cache in dev env
+composer                       Execute a composer command inside PHP container (e.g: make composer require drupal/paragraphs)
+
+ Quality assurance
+ -----------------
+
+code_sniffer                   PHP_CodeSnifer (https://github.com/squizlabs/PHP_CodeSniffer)
 ```
 
 ## Permissions
