@@ -42,10 +42,10 @@ cd ${PROJECT_DIR}
 if [[ ${MODE} != 'dev' ]]
 then
   echo_info "Download dependencies"
-  composer install --no-interaction --no-dev
+  composer install --no-interaction --no-dev --ignore-platform-reqs
 else
   echo_info "Download dev dependencies"
-  composer install --no-interaction
+  composer install --no-interaction --ignore-platform-reqs
 fi
 composer drupal-scaffold
 

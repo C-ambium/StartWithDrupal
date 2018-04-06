@@ -9,7 +9,7 @@
     "discard-changes" : true,
     "sort-packages": true,
     "platform": {
-      "php": "7.0"
+      "php": "7.1"
     }
   },
   "conflict": {
@@ -21,12 +21,6 @@
       "excludes": [
         "sites/default/default.settings.php"
       ]
-    },
-    "drupal-settings": {
-        "template-directory": "settings/templates",
-        "template-file": "settings.env.php.twig",
-        "destination-file": "settings.env.php",
-        "parameters-file": "settings/parameters.env.yml"
     },
     "installer-paths": {
       "drush/contrib/{$name}": [
@@ -99,9 +93,8 @@
     "drupal/config_filter": "~1.0",
     "drupal/console": "~1.0",
     "drupal/core": "~8.4",
-    "drupal/redis": "1.x-dev",
-    "drush/drush": "~9.0",
-    "niji-digital/drupal-settings": "^1.0"
+    "drupal/redis": "1.0-rc2",
+    "drush/drush": "~9.0"
   },
   "require-dev": {
     "behat/mink": "~1.7",
@@ -121,7 +114,6 @@
   },
   "scripts": {
     "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-    "prepare-settings": "NijiDigital\\Settings\\Plugin::generate",
     "post-install-cmd": [
       "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
     ],

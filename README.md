@@ -39,34 +39,31 @@ sudo setfacl -R -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./
 
 **Sources**: https://github.com/wodby/docker4drupal/blob/master/docs/permissions.md
 
-## Paramètres
 
-Par défaut le fichier `parameters.dist.yml` est utilisé.
+## Artifactory
 
-Pour définir ses propres paramètres, copier le fichier `parameters.dist.yml` en `parameters.yml` et modifier les paramètres
+Après avoir fait une demande de creation repos, vous avez les informations suivantes :
 
-Les paramètres par défaut sont :
-
-```yaml
-additional_modules: &additional_modules
-  - 'devel'
-  - 'kint'
-  - 'vardumper'
-  - 'vardumper_console'
-  - 'webprofiler'
-cache_maxage: '31536000'
-config_export_blacklist_module: *additional_modules
-config_export_blacklist_config: 'null'
-css_preprocess: 'TRUE'
-db_host: 'mariadb'
-db_name: 'drupal'
-db_pass: 'drupal'
-db_user: 'drupal'
-error_level: 'verbose'
-js_preprocess: 'TRUE'
-redis_host: 'redis'
-site_name: 'drupal'
 ```
+Add to gitlab secret variables :
+
+ARTIFACTORY_GENERIC_LOCAL_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic
+ARTIFACTORY_GENERIC_LOCAL_CLIENT_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic-client
+ARTIFACTORY_DOCKER_LOCAL_CLIENT_REGISTERY_URI: niji-socles-docker-client.artifactory.niji.delivery
+ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI: niji-socles-virtual-docker.artifactory.niji.delivery
+ARTIFACTORY_USER: niji-socles-publisher
+ARTIFACTORY_PASSWORD: SuQkJoZP5
+
+Send to the client for delivery :
+
+ARTIFACTORY_URL: https://artifactory.niji.delivery
+ARTIFACTORY_DOCKER_REGISTERY_URI: niji-socles-docker-client.artifactory.niji.delivery
+ARTIFACTORY_GENERIC_REPO_URL: https://artifactory.niji.delivery/artifactory/niji-socles-generic-client
+ARTIFACTORY_USER: niji-socles-client
+ARTIFACTORY_PASSWORD: m6t3EdzYGZP
+```
+
+## Paramètres
 
 ## Installation / Mise à jour
 
@@ -99,3 +96,39 @@ Attention, la base de donnée est supprimée lors de chaque installation.
 ### Reset password
 
 `./automation/bin/reset_password.sh`
+
+
+# Comment tester le deploiement on mode run
+
+## Initialiser l'environnement
+
+
+Lancer les commandes suiventes, cela permet d'arrêter l'envirennment en mode dev et s'authentifier à votre registery artifactory
+
+```bash
+docker-compose down
+...
+export ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI="niji-socle-drupal-docker.artifactory.niji.delivery"
+export PHP_DOCKER_IMAGE_NAME="niji-tools-socles-app-drupal-docker-php"
+export APACHE_DOCKER_IMAGE_NAME="niji-tools-socles-app-drupal-docker-apache"
+export CI_COMMIT_REF_SLUG="master"
+export COMPOSE_PROJECT_NAME="test"
+export APP_DOMAIN=test.socles.niji.delivery
+
+docker login ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
+Username: niji-socle
+Password:
+Login Succeeded
+```
+
+Ensuite, lancer l'environment en mode run:
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
+```
+
+Enfin, il nous reste l'installation:
+
+```bash
+docker-compose exec php ./automation/bin/install.sh
+```

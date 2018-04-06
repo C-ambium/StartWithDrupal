@@ -7,10 +7,6 @@
 /web/profiles/contrib/
 /web/libraries/
 
-# Ignore sensitive information
-/web/sites/*/settings.php
-/web/sites/*/settings.local.php
-/web/sites/*/settings.env.php
 # Ignore Drupal's file directory
 /web/sites/*/files/
 
@@ -23,3 +19,4 @@
 
 # Ignore docker-sync log dir
 /.docker-sync
+.env

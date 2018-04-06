@@ -1,101 +1,117 @@
-cache:
-  key: "$CI_BUILD_NAME"
-  untracked: true
-
 image: anasdox/phpwebbuilder:latest
 
 stages:
-  - build
   - quality-gates
-  #- unit-test
-  #- package
+  - package-app
+  - package-docker
   - deploy
-  #- integration-test
-  #- fonctional-test
 
-build:
-  stage: build
-  script:
-    - ./automation/bin/build.sh
-  artifacts:
-    name: "$CI_COMMIT_REF_NAME"
-    untracked: true
-    expire_in: 1 week
-    paths:
-      - .
-  tags:
-    - build
+variables:
+  CI_DEBUG_TRACE: "false"
+
+  PHP_DOCKER_IMAGE_NAME: "${CI_PROJECT_PATH_SLUG}-php"
+  PHP_DOCKER_FROM_IMAGE: "${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/wodby/drupal-php:7.1-3.0.0"
+  APACHE_DOCKER_IMAGE_NAME: "${CI_PROJECT_PATH_SLUG}-apache"
+  APACHE_DOCKER_FROM_IMAGE: "${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/wodby/php-apache:2.4-2.0.0"
 
 code-sniffer:
+  image: skilldlabs/docker-phpcs-drupal:latest
   stage: quality-gates
-  dependencies:
-    - build
   script:
     - ./automation/bin/code_sniffer.sh
   tags:
     - build
 
-#deploy-review:
-#  stage: deploy
-#  variables:
-#    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-#    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_${CI_COMMIT_REF_SLUG}_review'
-#  script:
-#    - "echo \"Deploy to : ${APP_DOMAIN}\""
-#  environment:
-#    name: review/${CI_COMMIT_REF_NAME}
-#    url: http://${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.review.${BASE_DOMAIN}
-#  only:
-#    - branches
-#  except:
-#    - master
-#  tags:
-#    - review
-#
-#stop-review:
-#  stage: deploy
-#  variables:
-#    GIT_STRATEGY: none
-#  script:
-#    - echo "Remove review app"
-#  when: manual
-#  environment:
-#    name: review/$CI_COMMIT_REF_NAME
-#    action: stop
-#  only:
-#    - branches
-#  tags:
-#    - review
-
-deploy-dev:
-  stage: deploy
-  variables:
-    APP_DOMAIN: '${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}'
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_dev'
+package-app-artifact:
+  stage: package-app
   script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
-  when: manual
-  dependencies:
+    - ./automation/bin/build.sh
+    - printf "{\"time\":\"%s\",\"hash\":\"%s\",\"tag\":\"%s\"}" `date -u +%Y-%m-%dT%H:%M:%SZ` ${CI_COMMIT_SHA} ${CI_COMMIT_REF_SLUG} > ./web/version.json
+    - |
+      tar \
+          --exclude-vcs \
+          --exclude='docker*.yml' \
+          --exclude='setup-dev*' \
+          --exclude='settings.local.php' \
+          -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
+
+    - |
+      curl \
+          -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
+          -H "X-Checksum-md5:`md5sum /tmp/${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
+          -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz \
+          --fail \
+          ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz
+  tags:
     - build
-  environment:
-    name: integ
-    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
   only:
     - master
+    - /^release.*/
+
+package-docker-php-artifact:
+  stage: package-docker
+  image: docker:latest
+  script:
+  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
+  - |
+    docker build -t ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
+      --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE} \
+      --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
+      --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
+      --no-cache \
+      --quiet \
+      ./automation/docker
+  - docker tag ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
   tags:
-    - dev
+    - build
+  only:
+    - master
+    - /^release.*/
+
+package-docker-apache-artifact:
+  stage: package-docker
+  image: docker:latest
+  script:
+  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
+  - |
+    docker build -t ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
+      --build-arg FROM_IMAGE=${APACHE_DOCKER_FROM_IMAGE} \
+      --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
+      --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
+      --no-cache \
+      --quiet \
+      ./automation/docker
+  - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
+  tags:
+    - build
+  only:
+    - master
+    - /^release.*/
+
+# https://docs.gitlab.com/ce/ci/yaml/README.html#special-yaml-features
+.job-deploy-script-template : &job-deploy-script-definition
+  script:
+    - "echo \"Deploy to : ${APP_DOMAIN}\""
+    - cp .env.dist .env
+    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
+    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php apache
+    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
+    - docker-compose exec -T php bash -c './automation/bin/wait-for.sh ${DB_HOST}:3306 --timeout=60 -- echo "mariadb is ready"'
+    - docker-compose exec -T php ./automation/bin/install.sh
+    - docker-compose exec -T php ./automation/bin/reset_password.sh
 
 deploy-integ:
+  <<: *job-deploy-script-definition
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_integ'
-  script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
-  dependencies:
-    - build
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_integ
   environment:
     name: integ
     url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
@@ -104,36 +120,47 @@ deploy-integ:
   tags:
     - integ
 
+deploy-dev:
+  <<: *job-deploy-script-definition
+  stage: deploy
+  variables:
+    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_dev
+  when: manual
+  environment:
+    name: dev
+    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+  only:
+    - master
+  tags:
+    - dev
+
 deploy-rec:
+  <<: *job-deploy-script-definition
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_rec'
-  script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_rec
   environment:
     name: rec
     url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
   when: manual
   only:
-    - ^release.*
+    - /^release.*/
   tags:
     - rec
 
 deploy-demo:
+  <<: *job-deploy-script-definition
   stage: deploy
   variables:
     APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: '${CI_PROJECT_PATH_SLUG}_demo'
-  script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - source /etc/.env && docker-compose up -d
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_demo
   environment:
     name: demo
     url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
   when: manual
   only:
-    - ^release.*
+    - /^release.*/
   tags:
     - demo

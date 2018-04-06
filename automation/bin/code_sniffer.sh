@@ -1,13 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-cd "$( dirname "${BASH_SOURCE[0]}" )"
+DIR=$( cd ${0%/*} && pwd -P )
+cd ${DIR}
+PROJECT_DIR=${DIR}/../..
+APP_DIR=${PROJECT_DIR}/web
 
-echo "Loading common file"
-source .common
-
-${PHPCS} --config-set installed_paths ${APP_DIR}/modules/contrib/coder/coder_sniffer/
-
-${PHPCS} \
+phpcs \
 --standard=Drupal,DrupalPractice \
 --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md \
 --ignore="*/node_modules/*,*/themes/*/css/*" \
