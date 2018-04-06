@@ -62,14 +62,14 @@ inst: ## Install and start the project
 	$(DOCKER_COMPOSE) exec php sh -c "./automation/bin/install.sh"
 
 setup:  ## Install and start the project for other environments
-setup: .env build start install
+setup: .env build start inst
 
 setup-dev:  ## Install and start the project for development
-setup-dev: .env build-dev start install
+setup-dev: .env build-dev start inst
 	docker-compose exec php sh -c "./automation/bin/reset_password.sh"
 
 reset: ## Stop and start a fresh install of the project
-reset: kill install
+reset: kill inst
 
 start: ## Start the project
 	@if [ ${OS_NAME} == 'linux' ]; \
@@ -98,7 +98,7 @@ endif
 console: ## Open a console in the passed container (e.g make console php)
 	$(DOCKER_COMPOSE) exec $(CONSOLE_ARGS) bash
 
-.PHONY: build build-dev setup setup-dev kill install reset start stop clean console
+.PHONY: build build-dev setup setup-dev kill inst reset start stop clean console
 
 ##
 ## Utils
