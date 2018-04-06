@@ -19,12 +19,6 @@ Sur votre environnement Linux ou MAC OS:
 make setup-dev
 ```
 
-Sur votre machine windows:
-
-```Powershell
-.\setup-dev-env.bat
-```
-
 ## Lignes de commandes
 
 Un certain nombre d'outils accessibles en ligne de commande sont disponible par l'intermédiaire d'un Makefile à la racine, qui peut être complété selon les besoins de chaque projet.
