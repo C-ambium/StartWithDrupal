@@ -17,7 +17,7 @@ endif
 
 DOCKER_COMPOSE_FILES = -f docker-compose.yml -f docker-compose-dev.yml
 ifneq ("$(wildcard docker-compose-dev-${OS_NAME}.yml)","")
-DOCKER_COMPOSE_FILES = ${DOCKER_COMPOSE_FILES} -f docker-compose-dev-${OS_NAME}.yml
+DOCKER_COMPOSE_FILES = -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-${OS_NAME}.yml
 endif
 
 DOCKER_COMPOSE  = docker-compose ${DOCKER_COMPOSE_FILES}
