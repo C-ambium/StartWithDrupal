@@ -43,7 +43,7 @@ Liste des commandes par défaut:
 
 build                          Build project dependencies
 build-dev                      Build project dependencies for development
-install                        Install and start the project
+inst                           Install and start the project
 setup                          Install and start the project for other environments
 setup-dev                      Install and start the project for development
 reset                          Stop and start a fresh install of the project
