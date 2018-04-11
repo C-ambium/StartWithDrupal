@@ -1,0 +1,28 @@
+version: "3"
+
+networks:
+  front:
+    external:
+      name: ${FRONT_NETWORK}
+  none:
+    external:
+      name: none
+
+services:
+
+  build:
+    image: anasdox/phpwebbuilder
+    user: "82:82"
+    working_dir: "/var/www/html"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - front
+
+  code_sniffer:
+    image: skilldlabs/docker-phpcs-drupal:latest
+    working_dir: "/var/www/html"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - none

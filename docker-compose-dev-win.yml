@@ -6,7 +6,11 @@ volumes:
 
 services:
   php:
+    user: root
+    command: "php-fpm -R"
     environment:
+      PHP_FPM_USER: root
+      PHP_FPM_GROUP: root
       PHP_XDEBUG: 1
       PHP_XDEBUG_DEFAULT_ENABLE: 1
       PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
