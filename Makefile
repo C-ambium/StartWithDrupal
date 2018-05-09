@@ -77,18 +77,20 @@ setup-dev: .env build-dev start inst
 reset: ## Stop and start a fresh install of the project
 reset: kill inst
 
-start: ## Start the project
-	@if [ ${OS_NAME} == 'linux' ]; \
-	then\
-		sudo setfacl -dR -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./;\
-		sudo setfacl -R -m u:$(whoami):rwX -m u:82:rwX -m u:100:rX ./;\
-	elif [ ${OS_NAME} == 'mac' ]; \
-	then\
-		sudo dseditgroup -o edit -a $(id -un) -t user $(id -gn 82);\
-	fi;\
-	$(DOCKER_COMPOSE) up -d --remove-orphans;\
-	$(DOCKER_COMPOSE) exec -u 0 php sh -c "if [ -d /var/www/html/web/sites/default ]; then chmod -R a+w /var/www/html/web/sites/default; fi";\
-    $(DOCKER_COMPOSE) exec -u 0 php sh -c "if [ -d /tmp/cache ]; then chmod -R a+w /tmp/cache; fi";\
+start: update-permissions ## Start the project
+	$(DOCKER_COMPOSE) up -d --remove-orphans
+	$(DOCKER_COMPOSE) exec -u 0 php sh -c "if [ -d /var/www/html/web/sites/default ]; then chmod -R a+w /var/www/html/web/sites/default; fi"
+	$(DOCKER_COMPOSE) exec -u 0 php sh -c "if [ -d /tmp/cache ]; then chmod -R a+w /tmp/cache; fi"
+
+update-permissions: ## Fix permissions between Docker and the host
+ifeq ($(OS_NAME), linux)
+update-permissions:
+	sudo setfacl -dR -m u:$(shell whoami):rwX -m u:82:rwX -m u:100:rX .
+	sudo setfacl -R -m u:$(shell whoami):rwX -m u:82:rwX -m u:100:rX .
+else ifeq ($(OS_NAME), mac)
+update-permissions:
+	sudo dseditgroup -o edit -a $(shell id -un) -t user $(shell id -gn 82)
+endif
 
 stop: ## Stop the project
 	$(DOCKER_COMPOSE) stop
@@ -104,7 +106,7 @@ endif
 console: ## Open a console in the passed container (e.g make console php)
 	$(DOCKER_COMPOSE) exec $(CONSOLE_ARGS) bash
 
-.PHONY: build build-dev setup setup-dev kill inst reset start stop clean console
+.PHONY: build build-dev setup setup-dev kill inst reset start stop clean console update-permissions
 
 ##
 ## Utils
