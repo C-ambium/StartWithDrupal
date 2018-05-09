@@ -59,12 +59,13 @@ kill:
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 
 inst: ## Install and start the project
-	@if [ ${OS_NAME} == 'win' ]; \
-	then\
-		$(DOCKER_COMPOSE) exec -u 0 php sh -c "./automation/bin/install.sh";\
-	else\
-		$(DOCKER_COMPOSE) exec php sh -c "./automation/bin/install.sh";\
-	fi;\
+ifeq ($(OS_NAME), win)
+inst:
+	$(DOCKER_COMPOSE) exec -u 0 php sh -c "./automation/bin/install.sh"
+else
+inst:
+	$(DOCKER_COMPOSE) exec -T php sh -c "./automation/bin/install.sh"
+endif
 
 setup:  ## Install and start the project for other environments
 setup: .env build start inst
