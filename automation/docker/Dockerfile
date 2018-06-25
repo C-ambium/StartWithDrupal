@@ -6,13 +6,7 @@ ARG ARTIFACTORY_PASSWORD
 ARG ARTIFACT_URI
 ARG COMMIT_SHA
 
-
-USER root
-
 RUN \
   COMMIT_SHA=${COMMIT_SHA} \
   cd /var/www/html && \
-  curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} ${ARTIFACT_URI} | tar xzv && \
-  chown -R 82:82 /var/www/html
-
-USER 82
+  curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} ${ARTIFACT_URI} | tar xzv
