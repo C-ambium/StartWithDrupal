@@ -33,15 +33,15 @@ package-app-artifact:
           --exclude='docker*.yml' \
           --exclude='setup-dev*' \
           --exclude='settings.local.php' \
-          -zcf /tmp/${CI_COMMIT_REF_SLUG}.tar.gz *
+          -zcf /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz *
 
     - |
       curl \
           -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-          -H "X-Checksum-md5:`md5sum /tmp/${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
-          -T /tmp/${CI_COMMIT_REF_SLUG}.tar.gz \
+          -H "X-Checksum-md5:`md5sum /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
+          -T /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
           --fail \
-          ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz
+          ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz
   tags:
     - build
   only:
@@ -58,7 +58,7 @@ package-docker-php-artifact:
       --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE} \
       --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
       --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
-      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
       --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
       --no-cache \
       --quiet \
@@ -81,7 +81,7 @@ package-docker-apache-artifact:
       --build-arg FROM_IMAGE=${APACHE_DOCKER_FROM_IMAGE} \
       --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
       --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
-      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_COMMIT_REF_SLUG}.tar.gz \
+      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
       --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
       --no-cache \
       --quiet \
