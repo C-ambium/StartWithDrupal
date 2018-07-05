@@ -97,7 +97,7 @@ stop: ## Stop the project
 
 clean: ## Stop the project and remove generated files
 clean: kill
-	rm -rf .env vendor
+	rm -rf .env vendor web/core web/modules/contrib web/themes/contrib web/profiles/contrib
 
 ifeq (console,$(firstword $(MAKECMDGOALS)))
   CONSOLE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
