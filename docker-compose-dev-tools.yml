@@ -17,6 +17,8 @@ services:
     image: anasdox/phpwebbuilder
     user: "82:82"
     working_dir: "/var/www/html"
+    environment:
+      APP_MODE: dev
     volumes:
       - .:/var/www/html
       - tmp:/tmp:delegated

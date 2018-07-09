@@ -114,30 +114,10 @@ $settings['rebuild_access'] = TRUE;
  */
 $settings['skip_permissions_hardening'] = TRUE;
 
-// Additional module to enable during installation.
-$settings['additional_modules'] = [
-  'devel',
-  'kint',
-  'vardumper',
-  'vardumper_console',
-  'webprofiler',
-];
-
-// Custom settings to ignore some configuration
-// provided by modules on export.
-$settings['config_export_blacklist_module'] = [
-  'devel',
-  'kint',
-  'vardumper',
-  'vardumper_console',
-  'webprofiler',
-];
-
-// Custom settings to ignore some configuration on export.
-$settings['config_export_blacklist_config'] = null;
-
 $config['system.performance']['css']['gzip'] = FALSE;
 $config['system.performance']['js']['gzip'] = FALSE;
 $config['views.settings']['ui']['show']['sql_query']['enabled'] = TRUE;
 $config['views.settings']['ui']['show']['performance_statistics'] = TRUE;
 $config['system.performance']['cache.page.max_age'] = 31536000;
+
+$config['config_split.config_split.config_dev']['status'] = TRUE;

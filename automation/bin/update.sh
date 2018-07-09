@@ -11,7 +11,7 @@ cd ${APP_DIR}
 ${DRUSH} state-set system.maintenance_mode 1 || error
 
 ${DRUSH} updatedb -y || error
-${DRUSH} config:import -y || error
+${DRUSH} config-split:import -y || error
 ${DRUSH} entity:updates -y || error
 
 ${DRUSH} state-set system.maintenance_mode 0 || error

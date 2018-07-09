@@ -14,6 +14,7 @@ services:
       PHP_XDEBUG_PROFILER_OUTPUT_DIR: /tmp/xdebug/profiler
       PHP_XDEBUG_TRACE_OUTPUT_DIR: /tmp/xdebug/traces
       PHP_BLACKFIRE: 1
+      APP_MODE: dev
     volumes:
       - ./:/var/www/html:cached
       - tmp:/tmp:delegated
