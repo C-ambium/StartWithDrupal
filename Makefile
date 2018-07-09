@@ -30,16 +30,10 @@ COMPOSER        = $(EXEC_PHP) composer
 BUILD	= $(DOCKER_COMPOSE) -f docker-compose-dev-tools.yml run --rm build
 QA        = $(DOCKER_COMPOSE) -f docker-compose-dev-tools.yml run --rm code_sniffer
 
-.env: .env.dist
-	@if [ -f .env ]; \
-	then\
-		echo '\033[1;41m/!\ The .env.dist file has changed. Please check your .env file (this message will not be displayed again).\033[0m';\
-		touch .env;\
-		exit 1;\
-	else\
-		echo cp .env.dist .env;\
-		cp .env.dist .env;\
-	fi
+.env:
+ifeq (,$(wildcard ./.env))
+	cp .env.dist .env
+endif
 
 ##
 ## Project
@@ -49,10 +43,6 @@ QA        = $(DOCKER_COMPOSE) -f docker-compose-dev-tools.yml run --rm code_snif
 build: ## Build project dependencies
 build: .env	start
 	$(BUILD) ./automation/bin/build.sh
-
-build-dev: ## Build project dependencies for development
-build-dev: .env	start
-	$(BUILD) ./automation/bin/build.sh --mode dev
 
 kill:
 	$(DOCKER_COMPOSE) kill
@@ -67,12 +57,16 @@ inst:
 	$(DOCKER_COMPOSE) exec -T php sh -c "./automation/bin/install.sh"
 endif
 
+update: ## Start and update the project
+update: .env	start
+	$(DOCKER_COMPOSE) exec php sh -c "./automation/bin/update.sh"
+
 setup:  ## Install and start the project for other environments
 setup: .env build start inst
 
 setup-dev:  ## Install and start the project for development
-setup-dev: .env build-dev start inst
-	docker-compose exec php sh -c "./automation/bin/reset_password.sh"
+setup-dev: setup
+	$(DOCKER_COMPOSE) exec php sh -c "./automation/bin/reset_password.sh"
 
 reset: ## Stop and start a fresh install of the project
 reset: kill inst
@@ -106,7 +100,7 @@ endif
 console: ## Open a console in the passed container (e.g make console php)
 	$(DOCKER_COMPOSE) exec $(CONSOLE_ARGS) bash
 
-.PHONY: build build-dev setup setup-dev kill inst reset start stop clean console update-permissions
+.PHONY: build setup setup-dev kill inst update reset start stop clean console update-permissions
 
 ##
 ## Utils
@@ -118,6 +112,9 @@ logs: ## Show drupal logs
 cr: ## Clear the cache in dev env
 	$(DRUSH) cache:rebuild
 
+cex: ## Configuration export
+	$(DRUSH) config-split:export -y
+
 ifeq (composer,$(firstword $(MAKECMDGOALS)))
   COMPOSER_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
   $(eval $(COMPOSER_ARGS):;@:)
@@ -125,7 +122,7 @@ endif
 composer: ## Execute a composer command inside PHP container (e.g: make composer require drupal/paragraphs)
 	$(COMPOSER) $(COMPOSER_ARGS)
 
-.PHONY: logs cr composer
+.PHONY: logs cr cex composer
 
 ##
 ## Quality assurance

@@ -6,40 +6,9 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 echo "Loading common file"
 source .common
 
-usage() {
-    cat << EOF
-usage: $0 options
-
-This script packages drupal app
-REQUIRE:
-    --mode  Running mode (dev, staging, prod)
-
-OPTIONS:
-    -h      Show this message
-EOF
-}
-
-while [ $# -gt 0 ]; do
-    case "$1" in
-        --mode )
-            shift
-            MODE=$1
-            ;;
-        -h )
-            usage
-            exit
-            break ;;
-        *)
-            usage
-            error "Unknown parameter"
-            ;;
-        esac
-    shift
-done
-
 cd ${PROJECT_DIR}
 
-if [[ ${MODE} != 'dev' ]]
+if [[ ${APP_MODE} != 'dev' ]]
 then
   echo_info "Download dependencies"
   composer install --no-interaction --no-dev --ignore-platform-reqs

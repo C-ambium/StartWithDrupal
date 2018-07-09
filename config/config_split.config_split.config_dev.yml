@@ -1,0 +1,19 @@
+uuid: d5a287ef-910d-4088-a3a1-a3f5e3fa0d5e
+langcode: fr
+status: true
+dependencies: {  }
+id: config_dev
+label: 'Development config'
+folder: ../config_dev
+module:
+  devel: 0
+  kint: 0
+  vardumper: 0
+  vardumper_console: 0
+  webprofiler: 0
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true
+weight: 0

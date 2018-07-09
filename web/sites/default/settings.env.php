@@ -56,3 +56,5 @@ $settings['trusted_host_patterns'] = [
 $config_directories = array(
     CONFIG_SYNC_DIRECTORY => getcwd() . '/../config/'
 );
+
+$config['config_split.config_split.config_dev']['status'] = FALSE;

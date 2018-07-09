@@ -5,8 +5,6 @@
  * Install actions for the Niji profile.
  */
 
-use Drupal\Core\Site\Settings;
-
 /**
  * Implements hook_install_tasks().
  *
@@ -30,10 +28,6 @@ function niji_install_tasks() {
       'display_name' => t('Uninstall update module for production.'),
       'type' => 'normal',
     ],
-    'niji_enable_additional_modules' => [
-      'display_name' => t('Enable additional modules'),
-      'type' => 'normal',
-    ],
   ];
 }
 
@@ -46,19 +40,4 @@ function niji_uninstall_update() {
   /** @var \Drupal\Core\Extension\ModuleInstallerInterface $mi */
   $mi = \Drupal::service('module_installer');
   $mi->uninstall(['update'], TRUE);
-}
-
-/**
- * Task callback for 'niji_enable_additional_modules'.
- *
- * @see niji_install_tasks()
- */
-function niji_enable_additional_modules() {
-  $additional_modules = Settings::get('additional_modules');
-
-  if (!empty($additional_modules)) {
-    /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
-    $module_installer = \Drupal::service('module_installer');
-    $module_installer->install($additional_modules);
-  }
 }
