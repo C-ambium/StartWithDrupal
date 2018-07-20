@@ -1,135 +1,130 @@
 {
-  "autoload": {
-    "classmap": [
-      "scripts/composer/ScriptHandler.php",
-      "scripts/composer/Settings.php"
-    ]
-  },
-  "config": {
-    "discard-changes" : true,
-    "sort-packages": true,
-    "platform": {
-      "php": "7.1"
-    }
-  },
-  "conflict": {
-    "drupal/drupal": "*"
-  },
-  "description": "Project template for Drupal 8 projects with composer",
-  "extra": {
-    "drupal-scaffold": {
-      "excludes": [
-        "sites/default/default.settings.php"
-      ]
+    "autoload": {
+        "classmap": [
+            "scripts/composer/ScriptHandler.php",
+            "scripts/composer/Settings.php"
+        ]
     },
-    "installer-paths": {
-      "drush/contrib/{$name}": [
-        "type:drupal-drush"
-      ],
-      "web/core": [
-        "type:drupal-core"
-      ],
-      "web/libraries/{$name}": [
-        "type:drupal-library"
-      ],
-      "web/modules/contrib/{$name}": [
-        "type:drupal-module"
-      ],
-      "web/profiles/contrib/{$name}": [
-        "type:drupal-profile"
-      ],
-      "web/themes/contrib/{$name}": [
-        "type:drupal-theme"
-      ]
+    "config": {
+        "discard-changes": true,
+        "platform": {
+            "php": "7.1"
+        },
+        "sort-packages": true
     },
-    "patches": {
-      "drupal/core": {
-        "[2788777] Allow a profile to be installed from existing config": "https://www.drupal.org/files/issues/2788777-97.patch"
-      },
-      "drupal/devel": {
-        "[2895745] Missing proxy class for lazy service 'webprofiler.list'": "https://www.drupal.org/files/issues/devel-missing_proxy_class_for_lazy_service_webprofiler_list-2895745-1.patch"
-      }
-    }
-  },
-  "license": "GPL-2.0+",
-  "minimum-stability": "dev",
-  "name": "drupal 8 app",
-  "prefer-stable": true,
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://packages.drupal.org/8"
+    "conflict": {
+        "drupal/drupal": "*"
     },
-    {
-      "type": "package",
-      "package": {
-        "name": "d3/d3",
-        "version": "v3.5.17",
-        "type": "drupal-library",
-        "source": {
-          "url": "https://github.com/d3/d3",
-          "type": "git",
-          "reference": "v3.5.17"
+    "description": "Project template for Drupal 8 projects with composer",
+    "extra": {
+        "drupal-scaffold": {
+            "excludes": [
+                "sites/default/default.settings.php"
+            ]
+        },
+        "installer-paths": {
+            "drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ]
+        },
+        "patches": {
+            "drupal/core": {
+                "[2788777] Allow a profile to be installed from existing config": "https://www.drupal.org/files/issues/2788777-97.patch"
+            },
+            "drupal/devel": {
+                "[2895745] Missing proxy class for lazy service 'webprofiler.list'": "https://www.drupal.org/files/issues/devel-missing_proxy_class_for_lazy_service_webprofiler_list-2895745-1.patch"
+            }
         }
-      }
     },
-    {
-      "type": "package",
-      "package": {
-        "name": "components/highlightjs",
-        "version": "9.7.0",
-        "type": "drupal-library",
-        "source": {
-          "url": "https://github.com/components/highlightjs",
-          "type": "git",
-          "reference": "9.7.0"
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
+    "name": "drupal 8 app",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "package": {
+                "name": "components/highlightjs",
+                "source": {
+                    "reference": "9.7.0",
+                    "type": "git",
+                    "url": "https://github.com/components/highlightjs"
+                },
+                "type": "drupal-library",
+                "version": "9.7.0"
+            },
+            "type": "package"
+        },
+        {
+            "package": {
+                "name": "d3/d3",
+                "source": {
+                    "reference": "v3.5.17",
+                    "type": "git",
+                    "url": "https://github.com/d3/d3"
+                },
+                "type": "drupal-library",
+                "version": "v3.5.17"
+            },
+            "type": "package"
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
         }
-      }
-    }
-  ],
-  "require": {
-    "composer/installers": "^1.0.20",
-    "cweagans/composer-patches": "~1.0",
-    "drupal-composer/drupal-scaffold": "^2.0.1",
-    "drupal/adminimal_admin_toolbar": "1.4",
-    "drupal/adminimal_theme": "1.3",
-    "drupal/config_filter": "~1.0",
-    "drupal/config_split": "~1.0",
-    "drupal/console": "~1.0",
-    "drupal/core": "^8.0",
-    "drupal/redis": "^1.0",
-    "drush/drush": "~9.0"
-  },
-  "require-dev": {
-    "behat/mink": "~1.7",
-    "behat/mink-goutte-driver": "~1.2",
-    "components/highlightjs": "9.7.*",
-    "d3/d3": "3.5.*",
-    "drupal/admin_toolbar": "~1.0",
-    "drupal/coder": "^2.9",
-    "drupal/devel": "1.x-dev",
-    "drupal/vardumper": "^1.0",
-    "jcalderonzumba/gastonjs": "~1.0.2",
-    "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
-    "mikey179/vfsStream": "~1.2",
-    "phpunit/phpunit": "~4.8",
-    "squizlabs/php_codesniffer": "2.*",
-    "symfony/css-selector": "~2.8"
-  },
-  "scripts": {
-    "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
-    "post-install-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
     ],
-    "post-update-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-    ],
-    "pre-install-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-    ],
-    "pre-update-cmd": [
-      "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
-    ]
-  },
-  "type": "project"
+    "require": {
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6",
+        "drupal-composer/drupal-scaffold": "^2.5",
+        "drupal/adminimal_admin_toolbar": "1.4",
+        "drupal/adminimal_theme": "1.3",
+        "drupal/config_filter": "~1.0",
+        "drupal/config_split": "~1.0",
+        "drupal/console": "^1.0.2",
+        "drupal/core": "~8.5.5",
+        "drupal/redis": "^1.0",
+        "drush/drush": "^9.0.0",
+        "niji/starter_kit": "^1.0",
+        "vlucas/phpdotenv": "^2.4",
+        "webflo/drupal-finder": "^1.0.0",
+        "webmozart/path-util": "^2.3"
+    },
+    "require-dev": {
+        "components/highlightjs": "9.7.*",
+        "d3/d3": "3.5.*",
+        "drupal/devel": "1.x-dev",
+        "drupal/vardumper": "^1.0",
+        "webflo/drupal-core-require-dev": "~8.5.3"
+    },
+    "scripts": {
+        "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ],
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ]
+    },
+    "type": "project"
 }
