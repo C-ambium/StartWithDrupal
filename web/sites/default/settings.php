@@ -796,4 +796,4 @@ $settings['entity_update_batch_size'] = 50;
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php') && getenv('APP_MODE') == "dev") {
    include $app_root . '/' . $site_path . '/settings.local.php';
 }
-$settings['install_profile'] = 'niji';
+$settings['install_profile'] = 'starter_kit';
