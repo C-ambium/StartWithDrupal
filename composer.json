@@ -43,11 +43,11 @@
             ]
         },
         "patches": {
-            "drupal/core": {
-                "[2788777] Allow a profile to be installed from existing config": "https://www.drupal.org/files/issues/2788777-97.patch"
-            },
             "drupal/devel": {
                 "[2895745] Missing proxy class for lazy service 'webprofiler.list'": "https://www.drupal.org/files/issues/devel-missing_proxy_class_for_lazy_service_webprofiler_list-2895745-1.patch"
+            },
+            "drush/drush": {
+                "[3624] Add support for core config installer": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/3625.patch"
             }
         }
     },
@@ -96,10 +96,10 @@
         "drupal/config_filter": "~1.0",
         "drupal/config_split": "~1.0",
         "drupal/console": "^1.0.2",
-        "drupal/core": "~8.5.5",
+        "drupal/core": "~8.6.0",
         "drupal/redis": "^1.0",
         "drush/drush": "^9.0.0",
-        "niji/starter_kit": "^1.0",
+        "niji/starter_kit": "~1.1",
         "vlucas/phpdotenv": "^2.4",
         "webflo/drupal-finder": "^1.0.0",
         "webmozart/path-util": "^2.3"
@@ -109,7 +109,7 @@
         "d3/d3": "3.5.*",
         "drupal/devel": "1.x-dev",
         "drupal/vardumper": "^1.0",
-        "webflo/drupal-core-require-dev": "~8.5.3"
+        "webflo/drupal-core-require-dev": "~8.6.0"
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",

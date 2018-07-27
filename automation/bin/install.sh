@@ -8,7 +8,7 @@ echo_info "Install DRUPAL"
 
 cd ${APP_DIR}
 
-${DRUSH} site:install starter_kit \
+${DRUSH} site:install --existing-config starter_kit \
   -y install_configure_form.update_status_module='array(FALSE,FALSE)' || error
 
 # Re-init drupal console.
