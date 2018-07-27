@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "05a929f8aec0a7dfa3a24c83a06c6584",
+    "content-hash": "d40703b5e84771365a224a857a4ddcba",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1554,16 +1554,16 @@
         },
         {
             "name": "drupal-composer/drupal-scaffold",
-            "version": "2.5.2",
+            "version": "2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal-composer/drupal-scaffold.git",
-                "reference": "80c7d2794d7d1b347c6f718feaa8ec9b02e43f4f"
+                "reference": "90f42025acddba70e7f045e069b301013d3d8bbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal-composer/drupal-scaffold/zipball/80c7d2794d7d1b347c6f718feaa8ec9b02e43f4f",
-                "reference": "80c7d2794d7d1b347c6f718feaa8ec9b02e43f4f",
+                "url": "https://api.github.com/repos/drupal-composer/drupal-scaffold/zipball/90f42025acddba70e7f045e069b301013d3d8bbc",
+                "reference": "90f42025acddba70e7f045e069b301013d3d8bbc",
                 "shasum": ""
             },
             "require": {
@@ -1594,7 +1594,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Composer Plugin for updating the Drupal scaffold files when using drupal/core",
-            "time": "2018-06-14T17:48:21+00:00"
+            "time": "2018-07-21T08:19:20+00:00"
         },
         {
             "name": "drupal/admin_toolbar",
@@ -1759,7 +1759,7 @@
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
             "license": [
-                "GPL-2.0+"
+                "GPL-2.0-or-later"
             ],
             "authors": [
                 {
@@ -1771,6 +1771,7 @@
                     "homepage": "https://www.drupal.org/user/139189"
                 }
             ],
+            "description": "Drupal administration theme with modern minimalist design.",
             "homepage": "https://www.drupal.org/project/adminimal_theme",
             "support": {
                 "source": "http://cgit.drupalcode.org/adminimal_theme"
@@ -2175,16 +2176,16 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.5.5",
+            "version": "8.6.0-alpha1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "900c28f19d4b5643f43c1cf046684046402eaac4"
+                "reference": "cefeacd9ca768387d42b5fc6b895c41439f4a7f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/900c28f19d4b5643f43c1cf046684046402eaac4",
-                "reference": "900c28f19d4b5643f43c1cf046684046402eaac4",
+                "url": "https://api.github.com/repos/drupal/core/zipball/cefeacd9ca768387d42b5fc6b895c41439f4a7f5",
+                "reference": "cefeacd9ca768387d42b5fc6b895c41439f4a7f5",
                 "shasum": ""
             },
             "require": {
@@ -2348,7 +2349,7 @@
                 "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
                 "mikey179/vfsstream": "^1.2",
                 "phpspec/prophecy": "^1.4",
-                "phpunit/phpunit": "^4.8.35 || ^6.1",
+                "phpunit/phpunit": "^4.8.35 || ^6.5",
                 "symfony/css-selector": "^3.4.0",
                 "symfony/debug": "^3.4.0",
                 "symfony/phpunit-bridge": "^3.4.3"
@@ -2383,9 +2384,6 @@
                     "recurse": false,
                     "replace": false,
                     "merge-extra": false
-                },
-                "patches_applied": {
-                    "[2788777] Allow a profile to be installed from existing config": "https://www.drupal.org/files/issues/2788777-97.patch"
                 }
             },
             "autoload": {
@@ -2409,7 +2407,360 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "time": "2018-07-04T21:08:11+00:00"
+            "time": "2018-07-19T20:14:40+00:00"
+        },
+        {
+            "name": "drupal/entity_browser",
+            "version": "2.0.0-alpha3",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/entity_browser",
+                "reference": "8.x-2.0-alpha3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_browser-8.x-2.0-alpha3.zip",
+                "reference": "8.x-2.0-alpha3",
+                "shasum": "bd8537cda5f287ecca273a5c5a9c36b020c522fe"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "require-dev": {
+                "drupal/ctools": "*",
+                "drupal/inline_entity_form": "*",
+                "drupal/paragraphs": "*",
+                "drupal/token": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev",
+                    "dev-8.x-1.x": "8.1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-2.0-alpha3",
+                    "datestamp": "1528141081",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                },
+                "patches_applied": {
+                    "[2865928] The View widget should filter based on field settings": "https://www.drupal.org/files/issues/entity-browser-view-context-2865928-14.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Janez Urevc",
+                    "homepage": "https://github.com/slashrsm",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Primoz Hmeljak",
+                    "homepage": "https://github.com/primsi",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "See other contributors",
+                    "homepage": "https://www.drupal.org/node/1943336/committers",
+                    "role": "contributor"
+                },
+                {
+                    "name": "Primsi",
+                    "homepage": "https://www.drupal.org/user/282629"
+                },
+                {
+                    "name": "marcingy",
+                    "homepage": "https://www.drupal.org/user/77320"
+                },
+                {
+                    "name": "samuel.mortenson",
+                    "homepage": "https://www.drupal.org/user/2582268"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                }
+            ],
+            "description": "Entity browsing and selecting component.",
+            "homepage": "http://drupal.org/project/entity_browser",
+            "support": {
+                "source": "http://cgit.drupalcode.org/entity_browser",
+                "issues": "http://drupal.org/project/issues/entity_browser",
+                "irc": "irc://irc.freenode.org/drupal-contribute"
+            }
+        },
+        {
+            "name": "drupal/entity_reference_revisions",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/entity_reference_revisions",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/entity_reference_revisions-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "417250a105afe8febef508c7f981d02cb138752d"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "require-dev": {
+                "drupal/diff": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1527241084",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Frans",
+                    "homepage": "https://www.drupal.org/user/514222"
+                },
+                {
+                    "name": "jeroen.b",
+                    "homepage": "https://www.drupal.org/user/1853532"
+                },
+                {
+                    "name": "miro_dietiker",
+                    "homepage": "https://www.drupal.org/user/227761"
+                }
+            ],
+            "description": "Adds a Entity Reference field type with revision support.",
+            "homepage": "https://www.drupal.org/project/entity_reference_revisions",
+            "support": {
+                "source": "http://cgit.drupalcode.org/entity_reference_revisions"
+            }
+        },
+        {
+            "name": "drupal/inline_entity_form",
+            "version": "1.0.0-rc1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/inline_entity_form",
+                "reference": "8.x-1.0-rc1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/inline_entity_form-8.x-1.0-rc1.zip",
+                "reference": "8.x-1.0-rc1",
+                "shasum": "898789fb6a0662fc2572b87f8d0654a0241473f9"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "require-dev": {
+                "drupal/entity_reference_revisions": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-rc1",
+                    "datestamp": "1527030784",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "RC releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "bojanz",
+                    "homepage": "https://www.drupal.org/user/86106"
+                },
+                {
+                    "name": "dawehner",
+                    "homepage": "https://www.drupal.org/user/99340"
+                },
+                {
+                    "name": "rszrama",
+                    "homepage": "https://www.drupal.org/user/49344"
+                },
+                {
+                    "name": "slashrsm",
+                    "homepage": "https://www.drupal.org/user/744628"
+                },
+                {
+                    "name": "webflo",
+                    "homepage": "https://www.drupal.org/user/254778"
+                }
+            ],
+            "description": "Provides a widget for inline management (creation, modification, removal) of referenced entities.",
+            "homepage": "https://www.drupal.org/project/inline_entity_form",
+            "support": {
+                "source": "http://cgit.drupalcode.org/inline_entity_form"
+            }
+        },
+        {
+            "name": "drupal/paragraphs",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/paragraphs",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "24c6d2153127f9d783a03c05baf3b9beb219113f"
+            },
+            "require": {
+                "drupal/core": "~8",
+                "drupal/entity_reference_revisions": "~1.3"
+            },
+            "require-dev": {
+                "drupal/block_field": "~1.0",
+                "drupal/ctools": "3.x-dev",
+                "drupal/diff": "~1.0",
+                "drupal/entity_browser": "1.x-dev",
+                "drupal/entity_usage": "2.x-dev",
+                "drupal/field_group": "~1.0",
+                "drupal/inline_entity_form": "~1.0",
+                "drupal/paragraphs-paragraphs_library": "*",
+                "drupal/replicate": "~1.0",
+                "drupal/search_api": "~1.0",
+                "drupal/search_api_db": "*"
+            },
+            "suggest": {
+                "drupal/entity_browser": "Recommended for an improved user experience when using the Paragraphs library module"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1527502684",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "Frans",
+                    "homepage": "https://www.drupal.org/user/514222"
+                },
+                {
+                    "name": "Primsi",
+                    "homepage": "https://www.drupal.org/user/282629"
+                },
+                {
+                    "name": "jeroen.b",
+                    "homepage": "https://www.drupal.org/user/1853532"
+                },
+                {
+                    "name": "miro_dietiker",
+                    "homepage": "https://www.drupal.org/user/227761"
+                }
+            ],
+            "description": "Enables the creation of Paragraphs entities.",
+            "homepage": "https://www.drupal.org/project/paragraphs",
+            "support": {
+                "source": "http://cgit.drupalcode.org/paragraphs"
+            }
+        },
+        {
+            "name": "drupal/paragraphs_browser",
+            "version": "1.0.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/paragraphs_browser",
+                "reference": "8.x-1.0-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraphs_browser-8.x-1.0-alpha1.zip",
+                "reference": "8.x-1.0-alpha1",
+                "shasum": "c94b54830da5e901fd6fe5bfa31fdaa0c1098b7c"
+            },
+            "require": {
+                "drupal/core": "~8.0",
+                "drupal/paragraphs": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-alpha1",
+                    "datestamp": "1511629085",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                },
+                "patches_applied": {
+                    "[2923479] Paragraph field's \"exclude selected types\" option not taken into account": "https://www.drupal.org/files/issues/2923479-paragraphs_browser-exclude_option_ignored-2.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Deciphered",
+                    "homepage": "https://www.drupal.org/user/103796"
+                },
+                {
+                    "name": "Mojiferous",
+                    "homepage": "https://www.drupal.org/user/1678298"
+                },
+                {
+                    "name": "michaellander",
+                    "homepage": "https://www.drupal.org/user/636494"
+                },
+                {
+                    "name": "tandroid",
+                    "homepage": "https://www.drupal.org/user/2879591"
+                }
+            ],
+            "description": "Provides browser for adding additional paragraphs.",
+            "homepage": "https://www.drupal.org/project/paragraphs_browser",
+            "support": {
+                "source": "http://cgit.drupalcode.org/paragraphs_browser"
+            }
         },
         {
             "name": "drupal/redis",
@@ -2471,6 +2822,67 @@
             }
         },
         {
+            "name": "drupal/video_embed_field",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/video_embed_field",
+                "reference": "8.x-2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/video_embed_field-8.x-2.0.zip",
+                "reference": "8.x-2.0",
+                "shasum": "e864f090b3cb9405376ca324d81ace83613e2019"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "require-dev": {
+                "drupal/colorbox": "*",
+                "drupal/media_entity": "*",
+                "drupal/media_entity_embeddable_video": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.x",
+                    "datestamp": "1523338084",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    },
+                    "package": "Field types"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Sam152",
+                    "homepage": "https://www.drupal.org/user/1485048"
+                },
+                {
+                    "name": "jec006",
+                    "homepage": "https://www.drupal.org/user/855980"
+                },
+                {
+                    "name": "plopesc",
+                    "homepage": "https://www.drupal.org/user/282415"
+                }
+            ],
+            "description": "A pluggable field type for storing videos from external video hosts such as Vimeo and YouTube.",
+            "homepage": "https://www.drupal.org/project/video_embed_field",
+            "support": {
+                "source": "http://cgit.drupalcode.org/video_embed_field"
+            }
+        },
+        {
             "name": "drush/drush",
             "version": "9.3.0",
             "source": {
@@ -2520,6 +2932,9 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "9.x-dev"
+                },
+                "patches_applied": {
+                    "[3624] Add support for core config installer": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/3625.patch"
                 }
             },
             "autoload": {
@@ -3180,21 +3595,46 @@
         },
         {
             "name": "niji/starter_kit",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.niji.fr/niji-tools/drupal/starter-kit",
-                "reference": "1152bf31843363aebe2f7f1062e615aba7439f13"
+                "reference": "24486dd36396d1c027e0a5820a75e365b7585aef"
             },
             "require": {
+                "cweagans/composer-patches": "~1.0",
+                "drupal/admin_toolbar": "~1.0",
+                "drupal/adminimal_admin_toolbar": "1.4",
+                "drupal/adminimal_theme": "1.3",
                 "drupal/config_split": "~1.0",
-                "drupal/core": "~8.0",
-                "drupal/redis": "~1.0"
+                "drupal/core": "~8.5",
+                "drupal/entity_browser": "~2.0",
+                "drupal/inline_entity_form": "~1.0",
+                "drupal/paragraphs": "~1.0",
+                "drupal/paragraphs_browser": "~1.0",
+                "drupal/redis": "~1.0",
+                "drupal/video_embed_field": "^2.0"
+            },
+            "require-dev": {
+                "components/highlightjs": "9.7.*",
+                "d3/d3": "3.5.*",
+                "drupal/devel": "1.x-dev",
+                "drupal/vardumper": "^1.0"
             },
             "type": "drupal-profile",
+            "extra": {
+                "patches": {
+                    "drupal/entity_browser": {
+                        "[2865928] The View widget should filter based on field settings": "https://www.drupal.org/files/issues/entity-browser-view-context-2865928-14.patch"
+                    },
+                    "drupal/paragraphs_browser": {
+                        "[2923479] Paragraph field's \"exclude selected types\" option not taken into account": "https://www.drupal.org/files/issues/2923479-paragraphs_browser-exclude_option_ignored-2.patch"
+                    }
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Starter kit profile",
-            "time": "2018-07-19T08:28:45+00:00"
+            "time": "2018-07-27T13:22:53+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5470,16 +5910,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "63d920d1c9ebc009d860c3666593a66298727dd6"
+                "reference": "273c18bf6aaab20be9667a3aa4e7702e1e4e7ced"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/63d920d1c9ebc009d860c3666593a66298727dd6",
-                "reference": "63d920d1c9ebc009d860c3666593a66298727dd6",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/273c18bf6aaab20be9667a3aa4e7702e1e4e7ced",
+                "reference": "273c18bf6aaab20be9667a3aa4e7702e1e4e7ced",
                 "shasum": ""
             },
             "require": {
@@ -5529,7 +5969,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2018-07-09T21:17:27+00:00"
+            "time": "2018-07-19T18:38:31+00:00"
         },
         {
             "name": "zendframework/zend-escaper",
@@ -5861,12 +6301,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "d8adafd0ba04fcd5a3865400e2bd0500c683f981"
+                "reference": "f4efaf52fed6a98bf6037a04f3fdef94dc0c8841"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/d8adafd0ba04fcd5a3865400e2bd0500c683f981",
-                "reference": "d8adafd0ba04fcd5a3865400e2bd0500c683f981",
+                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/f4efaf52fed6a98bf6037a04f3fdef94dc0c8841",
+                "reference": "f4efaf52fed6a98bf6037a04f3fdef94dc0c8841",
                 "shasum": ""
             },
             "require": {
@@ -5914,7 +6354,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2018-06-25T17:38:20+00:00"
+            "time": "2018-07-23T10:51:47+00:00"
         },
         {
             "name": "components/highlightjs",
@@ -6052,6 +6492,9 @@
                     "services": {
                         "drush.services.yml": "^9"
                     }
+                },
+                "patches_applied": {
+                    "[2895745] Missing proxy class for lazy service 'webprofiler.list'": "https://www.drupal.org/files/issues/devel-missing_proxy_class_for_lazy_service_webprofiler_list-2895745-1.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -6100,7 +6543,8 @@
                 "source": "http://cgit.drupalcode.org/devel",
                 "issues": "http://drupal.org/project/devel",
                 "irc": "irc://irc.freenode.org/drupal-contribute"
-            }
+            },
+            "time": "2018-07-17T07:39:42+00:00"
         },
         {
             "name": "drupal/vardumper",
@@ -7947,16 +8391,16 @@
         },
         {
             "name": "webflo/drupal-core-require-dev",
-            "version": "8.5.5",
+            "version": "8.6.0-alpha1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webflo/drupal-core-require-dev.git",
-                "reference": "f7be17bcdcff1e6d346e20476262a4eed7e5a741"
+                "reference": "a79b62e24f780285eb08f1a878e4019faea88166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webflo/drupal-core-require-dev/zipball/f7be17bcdcff1e6d346e20476262a4eed7e5a741",
-                "reference": "f7be17bcdcff1e6d346e20476262a4eed7e5a741",
+                "url": "https://api.github.com/repos/webflo/drupal-core-require-dev/zipball/a79b62e24f780285eb08f1a878e4019faea88166",
+                "reference": "a79b62e24f780285eb08f1a878e4019faea88166",
                 "shasum": ""
             },
             "require": {
@@ -7964,12 +8408,12 @@
                 "behat/mink-goutte-driver": "^1.2",
                 "behat/mink-selenium2-driver": "1.3.x-dev",
                 "drupal/coder": "^8.2.12",
-                "drupal/core": "8.5.5",
+                "drupal/core": "8.6.0-alpha1",
                 "jcalderonzumba/gastonjs": "^1.0.2",
                 "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
                 "mikey179/vfsstream": "^1.2",
                 "phpspec/prophecy": "^1.4",
-                "phpunit/phpunit": "^4.8.35 || ^6.1",
+                "phpunit/phpunit": "^4.8.35 || ^6.5",
                 "symfony/css-selector": "^3.4.0",
                 "symfony/debug": "^3.4.0",
                 "symfony/phpunit-bridge": "^3.4.3"
@@ -7980,7 +8424,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "require-dev dependencies from drupal/core",
-            "time": "2018-07-04T21:31:53+00:00"
+            "time": "2018-07-19T21:01:39+00:00"
         }
     ],
     "aliases": [],

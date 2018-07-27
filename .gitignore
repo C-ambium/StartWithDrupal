@@ -20,3 +20,6 @@
 # Ignore docker-sync log dir
 /.docker-sync
 .env
+
+# Ignore local docker compose
+docker-compose-local.yml
