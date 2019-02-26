@@ -1,0 +1,277 @@
+## Bitnami Drupal image version
+## ref: https://hub.docker.com/r/bitnami/drupal/tags/
+##
+image:
+  registry: gcr.io
+  repository: php_repo
+  tag: master
+  #TODO : what is this for ?
+  appMode: dev
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  pullSecrets:
+     - regcred
+
+## User of the application
+## ref: https://github.com/bitnami/bitnami-docker-drupal#configuration
+##
+drupalUsername: user
+
+## Application password
+## Defaults to a random 10-character alphanumeric string if not set
+## ref: https://github.com/bitnami/bitnami-docker-drupal#configuration
+##
+# drupalPassword:
+
+## Admin email
+## ref: https://github.com/bitnami/bitnami-docker-drupal#configuration
+##
+drupalEmail: user@example.com
+
+## Set to `yes` to allow the container to be started with blank passwords
+## ref: https://github.com/bitnami/bitnami-docker-wordpress#environment-variables
+allowEmptyPassword: "yes"
+
+##
+## External database configuration
+##
+externalDatabase:
+  ## Database host
+  # host:
+
+  ## Database user
+  # user: bn_drupal
+
+  ## Database password
+  # password:
+
+  ## Database name
+  # database: bitnami_drupal
+
+##
+## MariaDB chart configuration
+##
+mariadb:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: true
+
+  ## MariaDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  # mariadbRootPassword:
+
+  ## Create a database
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+  ##
+  db:
+    name: niji_drupal
+    user: niji_drupal
+  # mariadbDatabase: niji_drupal
+
+  ## Create a database user
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  # mariadbUser: niji_drupal
+
+  ## Password for mariadbUser
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+  ##
+  # mariadbPassword:
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: false
+    ## mariadb data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+  ## No master/slave installation
+  replication:
+    enabled: false
+
+
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+## Use ClusterIP if your setup includes ingress controller
+##
+serviceType: ClusterIP
+
+## Configure Ingress resource that allow you to access the Drupal installation
+## Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  enabled: true
+  # Used to create Ingress record (should used with ServiceType: ClusterIP).
+  hostname: drupal.local
+
+  ## Ingress annotations
+  ##
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/whitelist-source-range: '90.102.123.61/32,10.0.0.0/8,92.154.9.215/32,195.25.228.205/32,37.157.227.34/32,90.82.241.97/32,213.215.62.250/32'
+    # 92.154.9.215/32 - IP Niji Gateway réseau fixe ILM
+    # 195.25.228.205/32 - IP Niji Gateway réseau fixe Nantes
+    # 10.0.0.0/8 - IP Internal k8s
+    # 37.157.227.34/32 - Niji VPN
+    # 90.82.241.97 - IP Niji Gateway réseau fixe Lyon
+    # 213.215.62.250/32 - Niji Bordeaux
+
+  ## Ingress TLS configuration
+  ## Secrets must be manually created in the namespace
+  ##
+  # tls:
+  #   - secretName: wordpress.local-tls
+  #     hosts:
+  #       - drupal.local
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  apache:
+    ## apache data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  drupal:
+    ## drupal data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+    ## A manually managed Persistent Volume Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    ##
+    # existingClaim:
+
+    ## If defined, the drupal-data volume will mount to the specified hostPath.
+    ## Requires persistence.enabled: true
+    ## Requires persistence.existingClaim: nil|false
+    ## Default: nil.
+    ##
+    # hostPath:
+
+apache:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: false
+  image:
+    registry: gcr.io
+    repository: apache_repo
+    tag: master
+    pullPolicy: IfNotPresent
+  #port:
+
+redis:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: true
+  cluster:
+    enabled: false
+  # image:
+  #   registry: docker.io
+  #   repository: wodby/redis
+  #   tag: 4.0-2.1.5
+  usePassword: false
+
+phpmyadmin:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: false
+  db:
+    ## using default mysql port explicitly
+    port: 3306
+    ## if you are deploying it as part of a release, and the db is also in the release
+    ## you can pass a suffix that will be used to find the DB in releasename-dbSuffix
+    ## please note that this setting precedes dbHost
+    chartName: mariadb
+    #host: foo
+
+  # Probes are disabled since not a critical service
+  probesEnabled: false
+
+varnish:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: false
+  debug: true
+  image:
+    repository: wodby/drupal-varnis
+    tag: 4.1-2.2.0
+    pullPolicy: IfNotPresent
+  #port:
+
+mailhog:
+  ## Whether to use the database specified as a requirement or not. For example, to configure the chart with an existing database server.
+  enabled: true
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 300m
+
+## Configure volume mounts. This is useful for images whose data mount paths are
+## different than the default.
+## Setting volumeMounts.apache.mountPath to "" prevents Apache config mount.
+##
+volumeMounts:
+  drupal:
+    mountPath: /niji/drupal
+  apache:
+    mountPath: /niji/apache
+
+## Pass extra environment variables to the Drupal container.
+##
+# extraVars:
+# - name: EXTRA_VAR_1
+#   value: extra-var-value-1
+# - name: EXTRA_VAR_2
+#   value: extra-var-value-2
+
+## Configure liveness and readiness probes.
+## Drupal core exposes /user/login to unauthenticated requests, making it a good
+## default liveness and readiness path. However, that may not always be the
+## case. For example, if the image value is overridden to an image containing a
+## module that alters that route, or an image that does not auto-install Drupal.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+
+livenessProbe:
+  tcpSocket:
+    port: 80
+  initialDelaySeconds: 15
+  periodSeconds: 20
+readinessProbe:
+  tcpSocket:
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 10

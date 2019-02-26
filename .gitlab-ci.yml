@@ -1,165 +1,384 @@
-image: anasdox/phpwebbuilder:latest
-
 stages:
   - quality-gates
-  - package-app
   - package-docker
-  - deploy
+  - deploy-k8s-release
+  - expose-release
+  - drop-k8s-release
 
 variables:
   CI_DEBUG_TRACE: "false"
-
   PHP_DOCKER_IMAGE_NAME: "${CI_PROJECT_PATH_SLUG}-php"
-  PHP_DOCKER_FROM_IMAGE: "${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/wodby/drupal-php:7.2-4.5.1"
   APACHE_DOCKER_IMAGE_NAME: "${CI_PROJECT_PATH_SLUG}-apache"
-  APACHE_DOCKER_FROM_IMAGE: "${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/wodby/php-apache:2.4-3.0.5"
 
+#Code sniffer
 code-sniffer:
   image: skilldlabs/docker-phpcs-drupal:latest
   stage: quality-gates
   script:
     - ./automation/bin/code_sniffer.sh
+  artifacts:
+    when: always
+    paths:
+      - phpcs.json
+    expire_in: "99 yrs"    
   tags:
-    - build
+    - ci
 
-package-app-artifact:
-  stage: package-app
+#Sonarqube
+sonarqube:
+  image: ciricihq/gitlab-sonar-scanner
+  stage: quality-gates
+  retry: 1
   script:
-    - ./automation/bin/build.sh
-    - printf "{\"time\":\"%s\",\"hash\":\"%s\",\"tag\":\"%s\"}" `date -u +%Y-%m-%dT%H:%M:%SZ` ${CI_COMMIT_SHA} ${CI_COMMIT_REF_SLUG} > ./web/version.json
     - |
-      tar \
-          --exclude-vcs \
-          --exclude='docker*.yml' \
-          --exclude='Makefile' \
-          -zcf /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz *
+      sonar-scanner -X -Dsonar.host.url="http://sonarqube-sonarqube.default:9000" \
+      -Dsonar.branch="${CI_COMMIT_REF_NAME}" \
+      -Dsonar.projectName="${GCLOUD_PROJECT_ID}-${CI_COMMIT_SHA}:" \
+      -Dsonar.projectKey="${GCLOUD_PROJECT_ID}" \
+      -Dsonar.sources="." \
+      -Dsonar.gitlab.ref_name=${CI_COMMIT_REF_NAME} \
+      -Dsonar.gitlab.commit_sha=${CI_COMMIT_SHA} \
+      -Dsonar.gitlab.project_id=${CI_PROJECT_PATH} \
+      -Dsonar.github.pullRequest=${PULL_REQUEST_ID} \
+      -Dsonar.analysis.mode="publish" \
+      -Dsonar.language="php"
+  tags:
+    - ci
 
+#Template injected on steps that needs credentials to connect to Google Cloud Builder and other Gcloud services
+.gcloudAuth: &gcloudAuth
+  - echo $GCLOUD_GITLAB_RUNNER_SERVICE_KEY | base64 --decode -i > ~/gcloud-gitlab-runner-service-key.json
+  - gcloud auth activate-service-account gitlab-runner@${GCLOUD_PROJECT_ID}.iam.gserviceaccount.com --key-file ~/gcloud-gitlab-runner-service-key.json
+  - gcloud config set project ${GCLOUD_PROJECT_ID}
+  - gcloud --quiet container clusters get-credentials $CLOUDSDK_CONTAINER_CLUSTER --zone $GCLOUD_DEFAULT_ZONE
+
+#Create Docker image for both php and apoche on Google Container Builder
+#Theses builds uses multi-stage build features :
+# - a first php image to build artifact,
+# - a second with php plus artifact from previous stage
+# - a third with apache plus artifact from php
+package-docker-php-apache:
+  stage: package-docker
+  image: gcr.io/cloud-builders/gcloud
+  before_script: *gcloudAuth
+  script:
     - |
-      curl \
-          -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD} \
-          -H "X-Checksum-md5:`md5sum /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz | cut -d' ' -f1`" \
-          -T /tmp/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
-          --fail \
-          ${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz
+      gcloud builds submit . \
+        --config=./automation/docker/cloudbuild-php.yaml \
+        --substitutions _GCLOUD_PROJECT_ID=$GCLOUD_PROJECT_ID,_CI_COMMIT_SHA=${CI_COMMIT_SHA},_CI_COMMIT_REF_SLUG=${CI_COMMIT_REF_SLUG},_GCLOUD_GITLAB_RUNNER_SERVICE_KEY=${GCLOUD_GITLAB_RUNNER_SERVICE_KEY},_GCLOUD_ARTIFACTS_BUCKET=${GCLOUD_ARTIFACTS_BUCKET}
+    - |
+      gcloud builds submit . \
+        --config=./automation/docker/cloudbuild-apache.yaml \
+        --substitutions _GCLOUD_PROJECT_ID=$GCLOUD_PROJECT_ID,_CI_COMMIT_SHA=${CI_COMMIT_SHA},_CI_COMMIT_REF_SLUG=${CI_COMMIT_REF_SLUG},_GCLOUD_ARTIFACTS_BUCKET=${GCLOUD_ARTIFACTS_BUCKET}
   tags:
-    - build
+    - ci
   only:
     - master
     - /^release.*/
+    - /^feature.*/
 
-package-docker-php-artifact:
-  stage: package-docker
-  image: docker:latest
-  script:
-  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
-  - |
-    docker build -t ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
-      --build-arg FROM_IMAGE=${PHP_DOCKER_FROM_IMAGE} \
-      --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
-      --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
-      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
-      --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
-      --no-cache \
-      --quiet \
-      ./automation/docker
-  - docker tag ${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${PHP_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  tags:
-    - build
-  only:
-    - master
-    - /^release.*/
+#Template injected on steps that needs credentials to connect to Google Services and credentials to Helm Tiller Pod
+.gcloud_helmAuth: &gcloud_helmAuth
+  - export MIN_CI_COMMIT_SHA=${CI_COMMIT_SHA:0:8}
+  - echo $GCLOUD_GITLAB_RUNNER_SERVICE_KEY | base64 -d > ~/gcloud-gitlab-runner-service-key.json
+  - gcloud auth activate-service-account gitlab-runner@${GCLOUD_PROJECT_ID}.iam.gserviceaccount.com --key-file ~/gcloud-gitlab-runner-service-key.json
+  - gcloud config set project ${GCLOUD_PROJECT_ID}
+  - gcloud --quiet container clusters get-credentials $CLOUDSDK_CONTAINER_CLUSTER --zone $GCLOUD_DEFAULT_ZONE
+  - helm init --client-only
+  - cd automation/kubernetes/charts/drupal-niji
+  - helm dependency update
 
-package-docker-apache-artifact:
-  stage: package-docker
-  image: docker:latest
-  script:
-  - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
-  - |
-    docker build -t ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} \
-      --build-arg FROM_IMAGE=${APACHE_DOCKER_FROM_IMAGE} \
-      --build-arg ARTIFACTORY_USER=${ARTIFACTORY_USER} \
-      --build-arg ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD} \
-      --build-arg ARTIFACT_URI=${ARTIFACTORY_GENERIC_LOCAL_REPO_URL}/${CI_PROJECT_PATH_SLUG}-${CI_COMMIT_REF_SLUG}.tar.gz \
-      --build-arg COMMIT_SHA=${CI_COMMIT_SHA} \
-      --no-cache \
-      --quiet \
-      ./automation/docker
-  - docker tag ${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  - docker push ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}/${APACHE_DOCKER_IMAGE_NAME}:${CI_COMMIT_REF_SLUG}
-  tags:
-    - build
-  only:
-    - master
-    - /^release.*/
+# purge pv and pvc of mariadb and redis
+# Clean PVC & PV in order for a new install (NOT TO USE ON UPGRADE) to start on a proper state
+.clean-pvc: &clean-pvc |
+  pvRedisDB=$(kubectl get pvc -l app=redis,release=${RELEASE_NAME} -o=jsonpath='{range .items[*]}{.spec.volumeName}' -n ${ENV})
+  pvMariaDB=$(kubectl get pvc -l app=mariadb,release=${RELEASE_NAME} -o=jsonpath='{range .items[*]}{.spec.volumeName}' -n ${ENV})
+  nofailIfNoPV=`kubectl delete pv $pvRedisDB $pvMariaDB -n ${ENV} || :`
+  kubectl delete pvc -l app=mariadb,release=${RELEASE_NAME} -n ${ENV}
+  kubectl delete pvc -l app=redis,release=${RELEASE_NAME} -n ${ENV}
 
-# https://docs.gitlab.com/ce/ci/yaml/README.html#special-yaml-features
-.job-deploy-script-template : &job-deploy-script-definition
-  script:
-    - "echo \"Deploy to : ${APP_DOMAIN}\""
-    - cp .env.dist .env
-    - docker login -u ${ARTIFACTORY_USER} -p ${ARTIFACTORY_PASSWORD} ${ARTIFACTORY_DOCKER_VIRTUAL_REGISTERY_URI}
-    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml pull php apache
-    - docker-compose -f docker-compose.yml -f docker-compose-deploy.yml up -d
-    - docker-compose exec -T php bash -c './automation/bin/wait-for.sh ${DB_HOST}:3306 --timeout=60 -- echo "mariadb is ready"'
-    - docker-compose exec -T php ./automation/bin/install.sh
-    - docker-compose exec -T php ./automation/bin/reset_password.sh
+.install-release: &install-release |
+  helm install . \
+  --set drupalPassword=${MIN_CI_COMMIT_SHA} \
+  --set ingress.hostname=drupal-${RELEASE_NAME}.${BASE_DOMAIN} \
+  --set image.repository=${GCLOUD_PROJECT_ID}/img/php \
+  --set image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
+  --set apache.image.repository=${GCLOUD_PROJECT_ID}/img/apache \
+  --set apache.image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
+  -f values-${ENV}.yml \
+  --name ${RELEASE_NAME} \
+  --namespace ${ENV} \
+  --wait
 
+.update-release: &update-release |
+  # find the deployed pod and set maintenance mode
+  drupalPodUpgrade=`kubectl get pod --ignore-not-found=true -n ${ENV} --selector=app=${RELEASE_NAME}-drupal-niji -o=jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running`
+  kubectl exec -it --namespace ${ENV} $drupalPodUpgrade --container drupal -- sh -c "cd /var/www/html/web/sites/default/ && drush sset system.maintenance_mode 1 && drush cr"
+  # find existing db password
+  userPassword=`kubectl get secret --namespace ${ENV} ${RELEASE_NAME}-mariadb -o jsonpath="{.data.mariadb-password}" | base64 -d`
+  rootPassword=`kubectl get secret --namespace ${ENV} ${RELEASE_NAME}-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d`
+  helm upgrade ${RELEASE_NAME} . \
+    --set drupalPassword=${MIN_CI_COMMIT_SHA} \
+    --set ingress.hostname=drupal-${RELEASE_NAME}.${BASE_DOMAIN} \
+    --set image.repository=${GCLOUD_PROJECT_ID}/img/php \
+    --set image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
+    --set apache.image.repository=${GCLOUD_PROJECT_ID}/img/apache \
+    --set apache.image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
+    --set mariadb.rootUser.password=${rootPassword} \
+    --set mariadb.db.password=${userPassword} \
+    -f values-${ENV}.yml \
+    --namespace ${ENV} \
+    --wait
+
+.purge-release: &purge-release |
+  nofail=`helm del --purge ${RELEASE_NAME} || :`
+
+.post-install: &post-install |
+  # find the deployed pod
+  drupalPod=`kubectl get pod --ignore-not-found=true -n ${ENV} --selector=app=${RELEASE_NAME}-drupal-niji -o=jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running`
+  # run installation script in the php container inside the pod
+  kubectl exec -it $drupalPod --container drupal /var/www/html/automation/bin/install.sh --namespace ${ENV}
+  kubectl exec -it $drupalPod --container drupal /var/www/html/automation/bin/reset_password.sh --namespace ${ENV}
+
+.post-upgrade: &post-upgrade |
+  # find the deployed pod
+  drupalPod=`kubectl get pod --ignore-not-found=true -n ${ENV} --selector=app=${RELEASE_NAME}-drupal-niji -o=jsonpath='{.items[0].metadata.name}' --field-selector=status.phase=Running`
+  # run upgrade script in the php container inside the pod and disable maintenance
+  kubectl exec -it --namespace ${ENV} $drupalPod --container drupal -- /var/www/html/automation/bin/update.sh
+  kubectl exec -it --namespace ${ENV} $drupalPod --container drupal -- sh -c "cd /var/www/html/web/sites/default/ && drush sset system.maintenance_mode 0 && drush cr"
+
+
+# Test deployement with best effort CPU and Mem and no persistence in integ namespace
 deploy-integ:
-  <<: *job-deploy-script-definition
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_integ
-  environment:
-    name: integ
-    url: http://${CI_PROJECT_PATH_SLUG}.integ.${BASE_DOMAIN}
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=integ
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *clean-pvc
+    # purge the release ! if not done the next install will fail
+    - *purge-release
+    - *install-release
+    - *post-install
   only:
     - master
   tags:
     - integ
 
-deploy-dev:
-  <<: *job-deploy-script-definition
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_dev
-  when: manual
-  environment:
-    name: dev
-    url: http://${CI_PROJECT_PATH_SLUG}.dev.${BASE_DOMAIN}
+# Drop test deployment
+drop-integ:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: drop-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=integ
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *purge-release
   only:
     - master
   tags:
-    - dev
+    - integ
 
+# Deploy for demo with best effort CPU and Mem and no persistence in feature namespace
+deploy-feature:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=feature
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *clean-pvc
+    # purge the release ! if not done the next install will fail
+    - *purge-release
+    - *install-release
+    - *post-install
+  when: manual
+  only:
+    - /^feature.*/
+    - master
+  tags:
+    - feature
+
+# Upgrade for demo with best effort CPU and Mem and no persistence in feature namespace
+upgrade-feature:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=feature
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *update-release
+    - *post-upgrade
+  when: manual
+  only:
+    - /^feature.*/
+    - master
+  tags:
+    - feature
+
+# Drop feature deploymement
+drop-feature:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: drop-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=feature
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *purge-release
+  when: manual
+  only:
+    - /^feature.*/
+    - master
+  tags:
+    - feature
+
+# Deployement with best effort CPU and Mem and *persistence* in rec namespace
 deploy-rec:
-  <<: *job-deploy-script-definition
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_rec
-  environment:
-    name: rec
-    url: http://${CI_PROJECT_PATH_SLUG}.rec.${BASE_DOMAIN}
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=rec
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *clean-pvc
+    # purge the release ! if not done the next install will fail
+    - *purge-release
+    - *install-release
+    - *post-install
   when: manual
   only:
     - /^release.*/
+    - master
   tags:
     - rec
 
+# Upgrade with best effort CPU and Mem and *persistence* in rec namespace
+upgrade-rec:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=rec
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *update-release
+    - *post-upgrade
+  when: manual
+  only:
+    - /^release.*/
+    - master
+  tags:
+    - rec
+
+# Drop rec deployement
+drop-rec:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: drop-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=rec
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *purge-release
+  when: manual
+  only:
+    - /^release.*/
+    - master
+  tags:
+    - rec
+
+# Deployement with best effort CPU and Mem and no persistence in demo namespace
 deploy-demo:
-  <<: *job-deploy-script-definition
-  stage: deploy
-  variables:
-    APP_DOMAIN: ${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
-    COMPOSE_PROJECT_NAME: ${CI_PROJECT_PATH_SLUG}_demo
-  environment:
-    name: demo
-    url: http://${CI_PROJECT_PATH_SLUG}.demo.${BASE_DOMAIN}
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=demo
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *clean-pvc
+    # purge the release ! if not done the next install will fail
+    - *purge-release
+    - *install-release
+    - *post-install
+  when: manual
+  only:
+    - /^release.*/
+    - master
+  tags:
+    - demo
+
+# Upgrade with best effort CPU and Mem and no persistence in demo namespace
+upgrade-demo:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: deploy-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=demo
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *update-release
+    - *post-upgrade
+  when: manual
+  only:
+    - /^release.*/
+    - master
+  tags:
+    - demo 
+
+# Drop demo deployement
+drop-demo:
+  image: eu.gcr.io/public-docker-image/niji/helm-gke:latest
+  stage: drop-k8s-release
+  before_script: *gcloud_helmAuth
+  retry: 1
+  script:
+    - ENV=demo
+    - RELEASE_NAME=${ENV}-${CI_COMMIT_REF_SLUG}
+    - *purge-release
+  when: manual
+  only:
+    - /^release.*/
+    - master
+  tags:
+    - demo
+
+# Sign release artefact tgz
+sign-artefact-tgz-release:
+  image: eu.gcr.io/public-docker-image/niji/gsutil-ssl:latest
+  stage: expose-release
+  script:
+    - echo $GCLOUD_GITLAB_RUNNER_SERVICE_KEY | base64 -d > ~/gcloud-gitlab-runner-service-key.json
+    - gcloud auth activate-service-account gitlab-runner@${GCLOUD_PROJECT_ID}.iam.gserviceaccount.com --key-file ~/gcloud-gitlab-runner-service-key.json
+    - gcloud config set project ${GCLOUD_PROJECT_ID}
+    - echo $GCLOUD_ARTIFACT_SIGNED_SERVICE_KEY | base64 -d > ~/gcloud-arti-signed-service-key.json
+    - gsutil signurl -d 7d  ~/gcloud-arti-signed-service-key.json gs://${GCLOUD_ARTIFACTS_BUCKET}/${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}.tar.gz
   when: manual
   only:
     - /^release.*/
   tags:
-    - demo
+    - ci
+
+# Sign release image
+sign-artefact-docker-release:
+  image: eu.gcr.io/public-docker-image/niji/gsutil-ssl:latest
+  stage: expose-release
+  script:
+    - echo $GCLOUD_GITLAB_RUNNER_SERVICE_KEY | base64 -d > ~/gcloud-gitlab-runner-service-key.json
+    - gcloud auth activate-service-account gitlab-runner@${GCLOUD_PROJECT_ID}.iam.gserviceaccount.com --key-file ~/gcloud-gitlab-runner-service-key.json
+    - gcloud config set project ${GCLOUD_PROJECT_ID}
+    - echo $GCLOUD_ARTIFACT_SIGNED_SERVICE_KEY | base64 -d > ~/gcloud-arti-signed-service-key.json
+    - gsutil signurl -d 7d  ~/gcloud-arti-signed-service-key.json gs://${GCLOUD_ARTIFACTS_BUCKET}/${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}.php.docker.tar.gz
+    - gsutil signurl -d 7d  ~/gcloud-arti-signed-service-key.json gs://${GCLOUD_ARTIFACTS_BUCKET}/${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}.apache.docker.tar.gz
+  when: manual
+  only:
+    - /^release.*/
+  tags:
+    - ci

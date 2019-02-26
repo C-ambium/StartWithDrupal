@@ -58,3 +58,6 @@ $config_directories = array(
 );
 
 $config['config_split.config_split.config_dev']['status'] = FALSE;
+
+$settings['reverse_proxy'] = TRUE;
+$settings['reverse_proxy_addresses'] = [$_SERVER['REMOTE_ADDR']];

@@ -1,0 +1,34 @@
+image: 
+  registry: eu.gcr.io
+
+apache: 
+  image:
+    registry: eu.gcr.io
+
+resources:
+  requests:
+    cpu: 0m
+    memory: 0Mi
+
+mariadb:
+  resources:
+    requests:
+      cpu: 0m
+      memory: 0Mi
+  master:
+    persistence:
+      enabled: false 
+
+persistence:
+  enabled: false
+
+redis:
+  master:
+    persistence:
+      enabled: false
+
+
+ingress:
+  annotations:
+     kubernetes.io/ingress.class: traefik
+ 

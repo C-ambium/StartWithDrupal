@@ -1,0 +1,20 @@
+name: drupal-niji
+version: 0.1.0
+appVersion: latest
+description: Drupal CMS the Niji way.
+keywords:
+- drupal
+- cms
+- blog
+- http
+- web
+- application
+- php
+home: http://www.drupal.org/
+icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+sources:
+- https://gitlab.niji.fr/niji-tools/socles/app-drupal-docker
+maintainers:
+- name: niji
+  email: admin@niji.fr
+engine: gotpl

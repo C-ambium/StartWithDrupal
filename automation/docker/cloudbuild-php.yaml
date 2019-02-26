@@ -1,0 +1,64 @@
+steps:
+  - id: pull-for-cache
+    name: 'gcr.io/cloud-builders/docker'
+    #args: ['pull', '--disable-content-trust', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/${_CI_COMMIT_REF_SLUG}:latest']
+    #This hack not to fail if no previous --cache-from image exists
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-builder-latest || exit 0']
+    # exit 0'
+    # Building
+    #
+
+  - id: build-php
+    name: gcr.io/cloud-builders/docker
+    args: ['build',
+            '--build-arg', 'CI_COMMIT_REF_SLUG=${_CI_COMMIT_REF_SLUG}',
+            '--build-arg', 'CI_COMMIT_SHA=${_CI_COMMIT_SHA}',
+            '--cache-from', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-builder-latest',
+            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-builder-latest',
+            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-builder-${_CI_COMMIT_SHA}',
+            '-f', './automation/docker/DockerfileBuildPHP',
+            '.']         
+  #
+  # Push builder image to registry (used for next build cache and follow final package build)
+  #
+  - id: push-build-image
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php']
+
+  - id: build-final-php
+    name: gcr.io/cloud-builders/docker
+    args: ['build',
+            '--build-arg', 'CI_COMMIT_REF_SLUG=${_CI_COMMIT_REF_SLUG}',
+            '--build-arg', 'CI_COMMIT_SHA=${_CI_COMMIT_SHA}',
+            '--build-arg', 'GCLOUD_PROJECT_ID=${_GCLOUD_PROJECT_ID}',
+            '--build-arg', 'GCLOUD_GITLAB_RUNNER_SERVICE_KEY=${_GCLOUD_GITLAB_RUNNER_SERVICE_KEY}',
+            '--build-arg', 'GCLOUD_ARTIFACTS_BUCKET=${_GCLOUD_ARTIFACTS_BUCKET}',
+            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-latest',
+            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}',
+            '-f', './automation/docker/DockerfilePHP',
+            '.']   
+  #
+  # Push final image to registry
+  #
+  - id: push-image
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}']
+
+  #
+  # Save image as an archive
+  #
+  - id: export-php-image
+    name: gcr.io/cloud-builders/docker
+    args: ['save',
+            '-o', '${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.php.docker.tar.gz',
+            'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}']
+
+artifacts:
+  objects:
+    location: 'gs://${_GCLOUD_ARTIFACTS_BUCKET}'
+    paths: ['${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.php.docker.tar.gz']
+
+images:
+  - 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-latest'
+  - 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}'
