@@ -172,3 +172,8 @@ Enfin, il nous reste l'installation:
 ```bash
 docker-compose exec php ./automation/bin/install.sh
 ```
+
+
+
+
+

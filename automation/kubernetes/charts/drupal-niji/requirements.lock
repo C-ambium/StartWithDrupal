@@ -1,0 +1,15 @@
+dependencies:
+- name: mariadb
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 5.2.3
+- name: redis
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 4.3.0
+- name: phpmyadmin
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 1.3.0
+- name: mailhog
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 2.3.0
+digest: sha256:fae01dea9aaba76a410dd7541ae995e5fd5b6e627219b3c5cf2dc4eb52d0d264
+generated: 2018-11-28T15:14:09.8373774+01:00

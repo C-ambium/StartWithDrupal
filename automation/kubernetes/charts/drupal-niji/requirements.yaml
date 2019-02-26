@@ -1,0 +1,21 @@
+dependencies:
+- name: mariadb
+  version: "*"
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: mariadb.enabled
+- name: redis
+  version: "*"
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: redis.enabled
+- name: phpmyadmin
+  version: "*"
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: phpmyadmin.enabled
+- name: mailhog
+  version: "*"
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  condition: mailhog.enabled
+# - name: varnish
+#   version: 0.1.3
+#   repository: file://../varnish
+#   condition: varnish.enabled

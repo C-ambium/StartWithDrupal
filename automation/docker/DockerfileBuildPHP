@@ -1,0 +1,31 @@
+FROM eu.gcr.io/public-docker-image/niji/docker-phpwebbuilder:latest as builder
+
+RUN mkdir /tmp/build
+
+COPY ./automation/bin /tmp/build/automation/bin
+COPY ./config /tmp/build/config
+COPY ./drush /tmp/build/drush
+COPY ./scripts /tmp/build/scripts
+COPY ./web /tmp/build/web
+COPY ./composer.json /tmp/build/
+COPY ./composer.lock /tmp/build/
+
+RUN \
+  cd /tmp/build && \
+  ./automation/bin/build.sh
+
+ARG CI_COMMIT_SHA
+ARG CI_COMMIT_REF_SLUG
+
+RUN \
+  cd /tmp/build && \
+  echo ${CI_COMMIT_SHA} && \
+  echo ${CI_COMMIT_REF_SLUG} && \
+  printf "{\"time\":\"%s\",\"hash\":\"%s\",\"tag\":\"%s\"}" `date -u +%Y-%m-%dT%H:%M:%SZ` ${CI_COMMIT_SHA} ${CI_COMMIT_REF_SLUG} > ./web/version.json && \
+  tar \
+      --exclude-vcs \
+      --exclude='docker*.yml' \
+      --exclude='setup-dev*' \
+      --exclude='settings.local.php' \
+      -zcf /tmp/artefact.tar.gz *  
+

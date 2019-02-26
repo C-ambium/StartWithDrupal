@@ -1,0 +1,146 @@
+# TODO : appmode && app salt needed ?
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "drupal.fullname" . }}
+  labels:
+    app: {{ template "drupal.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  # Strategy which drop all old pod and next start all new pod : so with an service break (no issue in dev)
+  # This strategy allows to avoid the use of a NFS server for volume mount 
+  # Here we are sur that volume will be unmount on old container previous to be mount on new container
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "drupal.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "drupal.fullname" . }}
+    spec:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+      # Monte le volume partagé en groupid 82 (www-data pour partage avec apache)
+      securityContext:
+        fsGroup: 82
+      containers:
+      #
+      # Container apache
+      #
+      - name: apache
+        image: "{{ .Values.apache.image.registry }}/{{ .Values.apache.image.repository }}:{{ .Values.apache.image.tag }}"
+        imagePullPolicy: {{ .Values.apache.image.pullPolicy | quote }}
+        env:
+        - name: APACHE_BACKEND_HOST
+          value: localhost
+        - name: APACHE_LOG_LEVEL
+          value: debug
+        # - name: APACHE_SERVER_NAME
+        #   value: ${APP_DOMAIN}
+        - name: APACHE_SERVER_ROOT
+          value: /var/www/html/web
+        ports:
+        - name: http
+          containerPort: 80
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/www/html/web/sites/default/files/
+      #
+      # Container drupal
+      #
+      - name: drupal
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: APP_HASH_SALT
+          value: e-CQHqybWcnrbIQ_p1ZmsdMz32Xf7wiJJUJw-NXpwK5Rgcs5KvsOoN90hASE-iotVub33l_nWQ
+        - name: APP_MODE
+          value: {{ default "" .Values.appMode | quote }}
+        - name: COMPOSER_HOME
+          value: "/tmp"
+        - name: HOME
+          value: "/tmp"
+        - name: PHP_FPM_CLEAR_ENV
+          value: "no"
+        - name: PHP_SENDMAIL_PATH
+          value: "/usr/sbin/sendmail -t -i -S {{ template "drupal.mailhog.fullname" . }}:1025"
+        - name: REDIS_HOST
+          value: {{ template "drupal.redis.fullname" . }}-master
+        - name: ALLOW_EMPTY_PASSWORD
+        {{- if .Values.allowEmptyPassword }}
+          value: "yes"
+        {{- else }}
+          value: "no"
+        {{- end }}
+        - name: DB_HOST
+        {{- if .Values.mariadb.enabled }}
+          value: {{ template "drupal.mariadb.fullname" . }}
+        {{- else }}
+          value: {{ default "" .Values.externalDatabase.host | quote }}
+        {{- end }}
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+        {{- if .Values.mariadb.enabled }}
+          value: {{ default "" .Values.mariadb.db.name | quote }}
+        {{- else }}
+          value: {{ default "" .Values.externalDatabase.database | quote }}
+        {{- end }}
+        - name: DB_USER
+        {{- if .Values.mariadb.enabled }}
+          value: {{ default "" .Values.mariadb.db.user | quote }}
+        {{- else }}
+          value: {{ default "" .Values.externalDatabase.user | quote }}
+        {{- end }}
+        - name: DB_PASSWORD
+        {{- if .Values.mariadb.enabled }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "drupal.mariadb.fullname" . }}
+              key: mariadb-password
+        {{- else }}
+          value: {{ default "" .Values.externalDatabase.password | quote }}
+        {{- end }}
+{{- if .Values.extraVars }}
+{{ toYaml .Values.extraVars | indent 8 }}
+{{- end }}
+        ports:
+        - containerPort: 9000
+        livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 10 }}
+        readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 10 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/www/html/web/sites/default/files/
+      volumes:
+      - name: shared-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.drupal.existingClaim | default (printf "%s-drupal" (include "drupal.fullname" .)) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
