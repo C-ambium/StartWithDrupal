@@ -84,7 +84,7 @@ spec:
         - name: PHP_FPM_CLEAR_ENV
           value: "no"
         - name: PHP_SENDMAIL_PATH
-          value: "/usr/sbin/sendmail -t -i -S {{ template "drupal.mailhog.fullname" . }}:1025"
+          value: "/usr/sbin/sendmail -t -i -S {{ template "mailhog.fullname" . }}:1025"
         - name: REDIS_HOST
           value: {{ template "drupal.redis.fullname" . }}-master
         - name: ALLOW_EMPTY_PASSWORD

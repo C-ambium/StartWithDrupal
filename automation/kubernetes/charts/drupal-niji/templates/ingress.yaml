@@ -21,6 +21,13 @@ spec:
             backend:
               serviceName: {{ template "drupal.fullname" . }}
               servicePort: 80
+    - host: mailhog.{{ .Values.ingress.hostname }}
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "mailhog.fullname" . }}
+              servicePort: 8025
 {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
