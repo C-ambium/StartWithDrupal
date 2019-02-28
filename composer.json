@@ -45,9 +45,6 @@
         "patches": {
             "drupal/devel": {
                 "[2895745] Missing proxy class for lazy service 'webprofiler.list'": "https://www.drupal.org/files/issues/devel-missing_proxy_class_for_lazy_service_webprofiler_list-2895745-1.patch"
-            },
-            "drush/drush": {
-                "[3624] Add support for core config installer": "https://patch-diff.githubusercontent.com/raw/drush-ops/drush/pull/3625.patch"
             }
         }
     },
