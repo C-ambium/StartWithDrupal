@@ -12,15 +12,9 @@ variables:
 
 #Code sniffer
 code-sniffer:
-  image: skilldlabs/docker-phpcs-drupal:latest
+  image: niji/php-quality-tools
   stage: quality-gates
-  script:
-    - ./automation/bin/code_sniffer.sh
-  artifacts:
-    when: always
-    paths:
-      - phpcs.json
-    expire_in: "99 yrs"    
+  script: "phpcs --standard=phpcs.xml.dist"
   tags:
     - ci
 

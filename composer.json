@@ -50,7 +50,6 @@
     },
     "license": "GPL-2.0+",
     "minimum-stability": "dev",
-    "name": "drupal 8 app",
     "prefer-stable": true,
     "repositories": [
         {
