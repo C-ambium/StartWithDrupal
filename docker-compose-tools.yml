@@ -1,0 +1,18 @@
+version: "3"
+
+networks:
+  front:
+    external:
+      name: ${FRONT_NETWORK}
+
+volumes:
+  tmp:
+
+services:
+
+  php_quality_tools:
+    image: niji/php-quality-tools:latest
+    volumes:
+      - .:/code
+    networks:
+      - front
