@@ -53,7 +53,6 @@ The following table lists the configurable parameters of the Drupal chart and th
 | `image.pullPolicy`                | Drupal image pull policy              | `Always` if `imageTag` is `latest`, else `IfNotPresent`   |
 | `image.pullSecrets`               | Specify image pull secrets            | `nil` (does not add image pull secrets to deployed pods)  |
 | `drupalUsername`                  | User of the application               | `user`                                                    |
-| `drupalPassword`                  | Application password                  | _random 10 character long alphanumeric string_            |
 | `drupalEmail`                     | Admin email                           | `user@example.com`                                        |
 | `allowEmptyPassword`              | Allow DB blank passwords              | `yes`                                                     |
 | `extraVars`                       | Extra environment variables           | `nil`                                                     |
@@ -90,7 +89,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 
 ```console
 $ helm install --name my-release \
-  --set drupalUsername=admin,drupalPassword=password,mariadb.mariadbRootPassword=secretpassword \
+  --set drupalUsername=admin,mariadb.mariadbRootPassword=secretpassword \
     stable/drupal
 ```
 

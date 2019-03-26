@@ -93,7 +93,6 @@ package-docker-php-apache:
 
 .install-release: &install-release |
   helm install . \
-  --set drupalPassword=${MIN_CI_COMMIT_SHA} \
   --set ingress.hostname=drupal-${RELEASE_NAME}.${BASE_DOMAIN} \
   --set image.repository=${GCLOUD_PROJECT_ID}/img/php \
   --set image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
@@ -112,7 +111,6 @@ package-docker-php-apache:
   userPassword=`kubectl get secret --namespace ${ENV} ${RELEASE_NAME}-mariadb -o jsonpath="{.data.mariadb-password}" | base64 -d`
   rootPassword=`kubectl get secret --namespace ${ENV} ${RELEASE_NAME}-mariadb -o jsonpath="{.data.mariadb-root-password}" | base64 -d`
   helm upgrade ${RELEASE_NAME} . \
-    --set drupalPassword=${MIN_CI_COMMIT_SHA} \
     --set ingress.hostname=drupal-${RELEASE_NAME}.${BASE_DOMAIN} \
     --set image.repository=${GCLOUD_PROJECT_ID}/img/php \
     --set image.tag=${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA} \
