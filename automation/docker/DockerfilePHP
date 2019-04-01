@@ -1,6 +1,7 @@
 ARG CI_COMMIT_REF_SLUG
 ARG CI_COMMIT_SHA
 ARG GCLOUD_PROJECT_ID
+ARG PHP_VERSION
 
 FROM eu.gcr.io/${GCLOUD_PROJECT_ID}/img/php:${CI_COMMIT_REF_SLUG}-builder-${CI_COMMIT_SHA} as builder
 
@@ -9,8 +10,8 @@ FROM gcr.io/cloud-builders/gsutil:latest
 ARG CI_COMMIT_REF_SLUG
 ARG CI_COMMIT_SHA
 ARG GCLOUD_GITLAB_RUNNER_SERVICE_KEY
-ARG GCLOUD_PROJECT_ID
 ARG GCLOUD_ARTIFACTS_BUCKET
+ARG GCLOUD_PROJECT_ID
 
 COPY --from=builder /tmp/artefact.tar.gz /tmp/artefact.tar.gz
 
@@ -21,7 +22,7 @@ RUN \
   gsutil copy /tmp/artefact.tar.gz gs://${GCLOUD_ARTIFACTS_BUCKET}/${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}.tar.gz && \
   gsutil copy /tmp/artefact.tar.gz gs://${GCLOUD_ARTIFACTS_BUCKET}/${CI_COMMIT_REF_SLUG}-latest.tar.gz
 
-FROM wodby/drupal-php:7.1-3.0.0
+FROM wodby/drupal-php:${PHP_VERSION}
 
 COPY --from=builder /tmp/artefact.tar.gz /tmp/artefact.tar.gz
 
@@ -34,6 +35,6 @@ RUN \
   mv /tmp/artefact.tar.gz . && \
   COMMIT_SHA=${CI_COMMIT_SHA} && \
   tar zxfv ./artefact.tar.gz > /dev/null && \
-  chown -R 82:82 /var/www/html
+  chown -R wodby:wodby /var/www/html
 
-USER 82
+USER wodby

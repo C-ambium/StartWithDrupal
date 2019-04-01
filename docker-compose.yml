@@ -15,7 +15,7 @@ services:
 
   mariadb:
     container_name: ${COMPOSE_PROJECT_NAME}_mariadb
-    image: wodby/mariadb:10.3-3.4.1
+    image: wodby/mariadb:${MARIADB_VERSION}
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -33,7 +33,7 @@ services:
 
   php:
     container_name: ${COMPOSE_PROJECT_NAME}_php
-    image: wodby/drupal-php:7.3-4.12.5
+    image: wodby/drupal-php:${PHP_VERSION}
     depends_on:
       - mariadb
       - redis
@@ -65,7 +65,7 @@ services:
 
   apache:
     container_name: ${COMPOSE_PROJECT_NAME}_apache
-    image: wodby/apache:2.4-4.0.4
+    image: wodby/apache:${APACHE_VERSION}
     depends_on:
       - php
     environment:
@@ -87,7 +87,7 @@ services:
 
   varnish:
     container_name: ${COMPOSE_PROJECT_NAME}_varnish
-    image: wodby/drupal-varnish:4.1-2.2.0
+    image: wodby/drupal-varnish:${VARNISH_VERSION}
     depends_on:
       - apache
     environment:
@@ -105,7 +105,7 @@ services:
 
   redis:
     container_name: ${COMPOSE_PROJECT_NAME}_redis
-    image: wodby/redis:5.0-3.0.4
+    image: wodby/redis:${REDIS_VERSION}
     networks:
       - back
     healthcheck:
@@ -116,7 +116,7 @@ services:
 
   pma:
     container_name: ${COMPOSE_PROJECT_NAME}_pma
-    image: phpmyadmin/phpmyadmin:4.8
+    image: phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION}
     environment:
       PMA_HOST: ${COMPOSE_PROJECT_NAME}_mariadb
       PMA_USER: ${MYSQL_USER}
@@ -134,7 +134,7 @@ services:
 
   mailhog:
     container_name: ${COMPOSE_PROJECT_NAME}_mailhog
-    image: mailhog/mailhog:v1.0.0
+    image: mailhog/mailhog:${MAILHOG_VERSION}
     networks:
       - front
       - back

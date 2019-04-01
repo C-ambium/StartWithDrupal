@@ -34,6 +34,7 @@ steps:
             '--build-arg', 'GCLOUD_PROJECT_ID=${_GCLOUD_PROJECT_ID}',
             '--build-arg', 'GCLOUD_GITLAB_RUNNER_SERVICE_KEY=${_GCLOUD_GITLAB_RUNNER_SERVICE_KEY}',
             '--build-arg', 'GCLOUD_ARTIFACTS_BUCKET=${_GCLOUD_ARTIFACTS_BUCKET}',
+            '--build-arg', 'PHP_VERSION=${_PHP_VERSION}',
             '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-latest',
             '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/php:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}',
             '-f', './automation/docker/DockerfilePHP',
