@@ -48,6 +48,8 @@ spec:
         #   value: ${APP_DOMAIN}
         - name: APACHE_SERVER_ROOT
           value: /var/www/html/web
+        - name: APACHE_VHOST_PRESET
+          value: php
         ports:
         - name: http
           containerPort: 80

@@ -14,6 +14,7 @@ steps:
             '--build-arg', 'CI_COMMIT_REF_SLUG=${_CI_COMMIT_REF_SLUG}',
             '--build-arg', 'CI_COMMIT_SHA=${_CI_COMMIT_SHA}',
             '--build-arg', 'GCLOUD_PROJECT_ID=${_GCLOUD_PROJECT_ID}',
+            '--build-arg', 'APACHE_VERSION=${_APACHE_VERSION}',
             '--cache-from', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
             '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
             '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}',
