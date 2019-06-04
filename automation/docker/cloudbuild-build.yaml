@@ -1,0 +1,34 @@
+steps:
+  - id: pull-phpwebbuilder
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull eu.gcr.io/public-docker-image/niji/docker-phpwebbuilder:latest || exit 0']
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args: ['run',
+           '--rm',
+           '-v', '/workspace:/tmp/build',
+           '-w', '/tmp/build',
+           '-e', 'APP_MODE=prod',
+           'eu.gcr.io/public-docker-image/niji/docker-phpwebbuilder:latest',
+           './automation/bin/build.sh']
+
+  - id: create-artifact
+    name: gcr.io/cloud-builders/docker
+    args: ['run',
+           '--rm',
+           '-v', '/workspace:/tmp/build',
+           '-w', '/tmp/build',
+           '-e', 'CI_COMMIT_REF_SLUG=${_CI_COMMIT_REF_SLUG}',
+           '-e', 'CI_COMMIT_SHA=${_CI_COMMIT_SHA}',
+           'eu.gcr.io/public-docker-image/niji/docker-phpwebbuilder:latest',
+           './automation/bin/create-artifact.sh']
+
+  - id: copy-artifact
+    name: gcr.io/cloud-builders/gsutil
+    args: ['cp', '/workspace/artifact.tar.gz', 'gs://${_GCLOUD_ARTIFACTS_BUCKET}/${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.tar.gz']
+
+  - id: copy-artifact-latest
+    name: gcr.io/cloud-builders/gsutil
+    args: ['cp', '/workspace/artifact.tar.gz', 'gs://${_GCLOUD_ARTIFACTS_BUCKET}/${_CI_COMMIT_REF_SLUG}-latest.tar.gz']

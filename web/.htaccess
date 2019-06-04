@@ -39,6 +39,9 @@ AddEncoding gzip svgz
   php_value always_populate_raw_post_data   -1
 </IfModule>
 
+# Forbid access to core PHP files
+RedirectMatch 403 "/core/(.*).php"
+
 # Requires mod_expires to be enabled.
 <IfModule mod_expires.c>
   # Enable expirations.

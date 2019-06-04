@@ -1,25 +1,14 @@
-ARG CI_COMMIT_SHA
-ARG CI_COMMIT_REF_SLUG
-ARG GCLOUD_PROJECT_ID
 ARG APACHE_VERSION
-
-# hack in order to be able to use the COPY with var args
-FROM eu.gcr.io/${GCLOUD_PROJECT_ID}/img/php:${CI_COMMIT_REF_SLUG}-builder-${CI_COMMIT_SHA} as builder
 
 FROM wodby/apache:${APACHE_VERSION}
 
-ARG CI_COMMIT_SHA
+COPY ./artifact.tar.gz /tmp/artefact.tar.gz
 
 USER root
 
-COPY --from=builder /tmp/artefact.tar.gz /tmp/artefact.tar.gz
-
 RUN \
-  cp /tmp/artefact.tar.gz . && \
-  ls -al /tmp && \
-  COMMIT_SHA=${CI_COMMIT_SHA} && \
-  cd /var/www/html && \
-  tar zxfv /tmp/artefact.tar.gz > /dev/null  && \
+  tar zxfv /tmp/artefact.tar.gz -C /var/www/html > /dev/null && \
+  rm /tmp/artefact.tar.gz && \
   chown -R wodby:wodby /var/www/html
 
 USER wodby
