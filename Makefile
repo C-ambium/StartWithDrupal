@@ -75,8 +75,8 @@ reset_password: ## Reset the Drupal password to "admin".
 update-permissions: ## Fix permissions between Docker and the host.
 ifeq ($(OS_NAME), linux)
 update-permissions:
-	sudo setfacl -dR -m u:$(shell whoami):rwX -m u:82:rwX -m u:100:rX .
-	sudo setfacl -R -m u:$(shell whoami):rwX -m u:82:rwX -m u:100:rX .
+	sudo setfacl -dR -m u:$(shell whoami):rwX -m u:82:rwX -m u:1000:rwX .
+	sudo setfacl -R -m u:$(shell whoami):rwX -m u:82:rwX -m u:1000:rwX .
 else ifeq ($(OS_NAME), mac)
 update-permissions:
 	sudo dseditgroup -o edit -a $(shell id -un) -t user $(shell id -gn 82)

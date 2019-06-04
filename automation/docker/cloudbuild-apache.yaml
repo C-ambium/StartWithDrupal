@@ -1,37 +1,32 @@
 steps:
+  - id: copy-artifact
+    name: gcr.io/cloud-builders/gsutil
+    args: ['cp', 'gs://${_GCLOUD_ARTIFACTS_BUCKET}/${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.tar.gz', '/workspace/artifact.tar.gz']
+
   - id: pull-for-cache
     name: 'gcr.io/cloud-builders/docker'
-    #args: ['pull', '--disable-content-trust', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/${_CI_COMMIT_REF_SLUG}:latest']
-    #This hack not to fail if no previous --cache-from image exists
     entrypoint: 'bash'
     args: ['-c', 'docker pull eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest || exit 0']
-    # exit 0'
-    # Building
-    #
-  - id: build-apache
+
+  - id: build-image
     name: gcr.io/cloud-builders/docker
     args: ['build',
-            '--build-arg', 'CI_COMMIT_REF_SLUG=${_CI_COMMIT_REF_SLUG}',
-            '--build-arg', 'CI_COMMIT_SHA=${_CI_COMMIT_SHA}',
-            '--build-arg', 'GCLOUD_PROJECT_ID=${_GCLOUD_PROJECT_ID}',
-            '--build-arg', 'APACHE_VERSION=${_APACHE_VERSION}',
-            '--cache-from', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
-            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
-            '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}',
-            '-f', './automation/docker/DockerfileApache',
-            '.']
+           '--build-arg', 'APACHE_VERSION=${_APACHE_VERSION}',
+           '--cache-from', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
+           '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest',
+           '-t', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}',
+           '-f', './automation/docker/DockerfileApache',
+           '.']
 
-  #
-  # Push final image to registry
-  #
+  - id: push-image-latest
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest']
+
   - id: push-image
     name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}']
 
-  #
-  # Save image as an archive
-  #
-  - id: export-apache-image
+  - id: export-image
     name: gcr.io/cloud-builders/docker
     args: ['save',
             '-o', '${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.apache.docker.tar.gz',
@@ -41,7 +36,7 @@ artifacts:
   objects:
     location: 'gs://${_GCLOUD_ARTIFACTS_BUCKET}'
     paths: ['${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}.apache.docker.tar.gz']
-    
+
 images:
   - 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-latest'
   - 'eu.gcr.io/${_GCLOUD_PROJECT_ID}/img/apache:${_CI_COMMIT_REF_SLUG}-${_CI_COMMIT_SHA}'

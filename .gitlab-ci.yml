@@ -1,5 +1,6 @@
 stages:
   - quality-gates
+  - build-app
   - package-docker
   - deploy-k8s-release
   - expose-release
@@ -48,12 +49,25 @@ sonarqube:
   - gcloud config set project ${GCLOUD_PROJECT_ID}
   - gcloud --quiet container clusters get-credentials $CLOUDSDK_CONTAINER_CLUSTER --zone $GCLOUD_DEFAULT_ZONE
 
-#Create Docker image for both php and apoche on Google Container Builder
-#Theses builds uses multi-stage build features :
-# - a first php image to build artifact,
-# - a second with php plus artifact from previous stage
-# - a third with apache plus artifact from php
-package-docker-php-apache:
+#Create application package
+build-app:
+  stage: build-app
+  image: gcr.io/cloud-builders/gcloud
+  before_script: *gcloudAuth
+  script:
+    - |
+      gcloud builds submit . \
+        --config=./automation/docker/cloudbuild-build.yaml \
+        --substitutions _CI_COMMIT_SHA=${CI_COMMIT_SHA},_CI_COMMIT_REF_SLUG=${CI_COMMIT_REF_SLUG},_GCLOUD_ARTIFACTS_BUCKET=${GCLOUD_ARTIFACTS_BUCKET}
+  tags:
+    - ci
+  only:
+    - master
+    - /^release.*/
+    - /^feature.*/
+
+#Create Docker image for both php and apache on Google Container Builder
+package-docker-php:
   stage: package-docker
   image: gcr.io/cloud-builders/gcloud
   before_script: *gcloudAuth
@@ -61,7 +75,19 @@ package-docker-php-apache:
     - |
       gcloud builds submit . \
         --config=./automation/docker/cloudbuild-php.yaml \
-        --substitutions _GCLOUD_PROJECT_ID=$GCLOUD_PROJECT_ID,_CI_COMMIT_SHA=${CI_COMMIT_SHA},_CI_COMMIT_REF_SLUG=${CI_COMMIT_REF_SLUG},_GCLOUD_GITLAB_RUNNER_SERVICE_KEY=${GCLOUD_GITLAB_RUNNER_SERVICE_KEY},_GCLOUD_ARTIFACTS_BUCKET=${GCLOUD_ARTIFACTS_BUCKET},_PHP_VERSION=${PHP_VERSION}
+        --substitutions _GCLOUD_PROJECT_ID=$GCLOUD_PROJECT_ID,_CI_COMMIT_SHA=${CI_COMMIT_SHA},_CI_COMMIT_REF_SLUG=${CI_COMMIT_REF_SLUG},_GCLOUD_ARTIFACTS_BUCKET=${GCLOUD_ARTIFACTS_BUCKET},_PHP_VERSION=${PHP_VERSION}
+  tags:
+    - ci
+  only:
+    - master
+    - /^release.*/
+    - /^feature.*/
+
+package-docker-apache:
+  stage: package-docker
+  image: gcr.io/cloud-builders/gcloud
+  before_script: *gcloudAuth
+  script:
     - |
       gcloud builds submit . \
         --config=./automation/docker/cloudbuild-apache.yaml \
