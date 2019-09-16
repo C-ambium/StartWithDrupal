@@ -119,13 +119,16 @@ ingress:
   ##
   annotations:
     kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/whitelist-source-range: '90.102.123.61/32,10.0.0.0/8,92.154.9.215/32,195.25.228.205/32,37.157.227.34/32,90.82.241.97/32,213.215.62.250/32'
+    ingress.kubernetes.io/whitelist-source-range: '90.102.123.61/32,10.0.0.0/8,92.154.9.215/32,195.25.228.205/32,37.157.227.34/32,90.82.241.97/32,213.215.62.250/32,93.13.84.90/32,93.13.84.100/32,77.192.166.130/32'
     # 92.154.9.215/32 - IP Niji Gateway réseau fixe ILM
     # 195.25.228.205/32 - IP Niji Gateway réseau fixe Nantes
+    # 93.13.84.100/32 - IP Niji Gateway réseau fixe Nantes (new)
     # 10.0.0.0/8 - IP Internal k8s
     # 37.157.227.34/32 - Niji VPN
     # 90.82.241.97 - IP Niji Gateway réseau fixe Lyon
     # 213.215.62.250/32 - Niji Bordeaux
+    # 77.192.166.130/32 - Niji Bordeaux (new)
+    # 93.13.84.90/32 - Niji Lille
 
   ## Ingress TLS configuration
   ## Secrets must be manually created in the namespace
