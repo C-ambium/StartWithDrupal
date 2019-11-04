@@ -119,8 +119,10 @@ ingress:
   ##
   annotations:
     kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/whitelist-source-range: '90.102.123.61/32,10.0.0.0/8,92.154.9.215/32,195.25.228.205/32,37.157.227.34/32,90.82.241.97/32,213.215.62.250/32,93.13.84.90/32,93.13.84.100/32,77.192.166.130/32'
+    ingress.kubernetes.io/whitelist-source-range: '77.197.104.170/32,90.102.123.61/32,10.0.0.0/8,92.154.9.215/32,195.25.228.205/32,37.157.227.34/32,90.82.241.97/32,213.215.62.250/32,93.13.84.90/32,93.13.84.100/32,77.192.166.130/32'
     # 92.154.9.215/32 - IP Niji Gateway réseau fixe ILM
+    # 90.102.123.61 - IP Niji Gateway réseau fixe Rennes (old)
+    # 77.197.104.170 - IP Niji Gateway réseau fixe Rennes (new)
     # 195.25.228.205/32 - IP Niji Gateway réseau fixe Nantes
     # 93.13.84.100/32 - IP Niji Gateway réseau fixe Nantes (new)
     # 10.0.0.0/8 - IP Internal k8s
