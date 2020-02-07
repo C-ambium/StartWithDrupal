@@ -1,0 +1,10 @@
+uuid: 4f54a7f9-0316-49fe-bd90-ba293de1129c
+langcode: fr
+status: true
+dependencies: {  }
+id: fakemeplease
+label: FakeMePlease
+data_samplers:
+  image: faker_image
+  text_with_summary: faker_real_text_with_summary
+  email: faker_email

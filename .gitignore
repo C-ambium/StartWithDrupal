@@ -10,6 +10,7 @@ composer.phar
 /web/core/
 /web/modules/contrib/
 /web/themes/contrib/
+/web/themes/custom/fidal_theme
 /web/profiles/contrib/
 /web/libraries/
 

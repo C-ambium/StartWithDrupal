@@ -1,0 +1,8 @@
+uuid: 4c3767ec-cbfe-4811-94f3-eccc6fd368ea
+langcode: fr
+status: true
+dependencies: {  }
+id: first_custom_block
+label: 'First Custom Block'
+revision: 0
+description: 'Testing - custom block '

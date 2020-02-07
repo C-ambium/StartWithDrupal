@@ -1,0 +1,20 @@
+uuid: 2f1be4eb-0c5d-48c5-933e-3db364270c05
+langcode: fr
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bootstrap
+id: messages
+theme: bootstrap
+region: sidebar_second
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: Messages
+  provider: system
+  label_display: '0'
+visibility: {  }

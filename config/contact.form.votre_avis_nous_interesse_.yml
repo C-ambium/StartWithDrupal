@@ -1,0 +1,12 @@
+uuid: 3064a0bf-e1c5-4256-9ef7-b85fdf6d8197
+langcode: fr
+status: true
+dependencies: {  }
+id: votre_avis_nous_interesse_
+label: 'Votre avis nous intéresse !'
+recipients:
+  - hello@drupee.com
+reply: ''
+weight: 0
+message: ''
+redirect: ''
