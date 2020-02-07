@@ -13,10 +13,6 @@ composer.phar
 /web/profiles/contrib/
 /web/libraries/
 
-# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
-# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
-# composer.lock
-
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 ### Drupal8 ###
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
@@ -119,44 +115,8 @@ phpcs.json
 /.idea/
 /builds/
 
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# Generated files
-.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
-
 # CMake
 cmake-build-*/
-
-# Mongo Explorer plugin
-.idea/**/mongoSettings.xml
 
 # File-based project format
 *.iws
@@ -170,38 +130,18 @@ out/
 # JIRA plugin
 atlassian-ide-plugin.xml
 
-# Cursive Clojure plugin
-.idea/replstate.xml
-
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Editor-based Rest Client
-.idea/httpRequests
-
-# Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
-
 ### PhpStorm Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
 # *.iml
 # modules.xml
-# .idea/misc.xml
 # *.ipr
-
-# Sonarlint plugin
-.idea/**/sonarlint/
-
-# SonarQube Plugin
-.idea/**/sonarIssues.xml
-
-# Markdown Navigator plugin
-.idea/**/markdown-navigator.xml
-.idea/**/markdown-navigator/
 
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 ### Symfony ###
@@ -286,7 +226,6 @@ coverage/
 libpeerconnection.log/
 npm-debug.log
 testem.log
-typings/
 
 # e2e
 e2e/*.js
@@ -301,7 +240,6 @@ e2e/*.map
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 # Logs
 logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -339,7 +277,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -364,7 +301,6 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -517,76 +453,23 @@ local.properties
 .idea/**/gradle.xml
 .idea/**/libraries
 
-# Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
-# since they will be recreated, and may cause churn.  Uncomment if using
-# auto-import.
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
-
-# CMake
-cmake-build-*/
-
-# Mongo Explorer plugin
-.idea/**/mongoSettings.xml
-
-# File-based project format
-*.iws
-
-# IntelliJ
-out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Cursive Clojure plugin
-.idea/replstate.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
-
-# Editor-based Rest Client
-.idea/httpRequests
-
-# Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
-
-
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 ### Intellij+all Patch ###
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
-# Ignores the whole .idea folder and all .iml files
+# Ignores all .iml files
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
 
 
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
-
 *.iml
 modules.xml
-.idea/misc.xml
 *.ipr
-
-# Sonarlint plugin
-.idea/sonarlint
-
 
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 ### Java ###
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 # Compiled class file
 *.class
-
-# Log file
-*.log
 
 # BlueJ files
 *.ctxt
@@ -626,9 +509,6 @@ hs_err_pid*
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
 # *.iml
 # *.ipr
 
@@ -661,38 +541,7 @@ hs_err_pid*
 
 # *.iml
 # modules.xml
-# .idea/misc.xml
 # *.ipr
-
-# Sonarlint plugin
-.idea/**/sonarlint/
-
-# SonarQube Plugin
-.idea/**/sonarIssues.xml
-
-# Markdown Navigator plugin
-.idea/**/markdown-navigator.xml
-.idea/**/markdown-navigator/
-
-
-#———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
-### Linux ###
-#———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
-
-*~
-
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
 
 #———————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
 ### macOS ###
