@@ -1,0 +1,30 @@
+uuid: 4a67f672-14ab-4e8e-8972-2213a12ffbb3
+langcode: fr
+status: true
+dependencies:
+  module:
+    - node
+    - system
+  theme:
+    - bootstrap_theme
+_core:
+  default_config_hash: fNNLN48MSGSLiqwIFywCuxH2Dk_IxDbaP0kYhg_IPrg
+id: bootstrap_theme_content
+theme: bootstrap_theme
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      article: article
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

@@ -1,0 +1,21 @@
+uuid: 28da9fc3-9824-477f-ae7b-90fa31a6bbad
+langcode: fr
+status: true
+dependencies:
+  config:
+    - contact.form.personal
+    - field.storage.contact_message.field_mail
+id: contact_message.personal.field_mail
+field_name: field_mail
+entity_type: contact_message
+bundle: personal
+label: Mail
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: email@domaine.fr
+default_value_callback: ''
+settings: {  }
+field_type: email

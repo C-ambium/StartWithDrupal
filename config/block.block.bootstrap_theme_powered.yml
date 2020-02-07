@@ -1,0 +1,22 @@
+uuid: 9c51bcbe-359d-4209-ac79-135e2c2ec6d7
+langcode: fr
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - bootstrap_theme
+_core:
+  default_config_hash: iggZSiUKz4mYP1YPJ8SsUfFu79HIgOTt6IDy3Up59aM
+id: bootstrap_theme_powered
+theme: bootstrap_theme
+region: footer
+weight: -10
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Niji'
+  provider: system
+  label_display: '0'
+visibility: {  }

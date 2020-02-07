@@ -1,0 +1,25 @@
+uuid: e1609097-46a1-44b7-bf32-bf55a9a07c39
+langcode: fr
+status: true
+dependencies:
+  content:
+    - 'block_content:first_custom_block:49cc946e-d641-47ac-9c97-2aaa94db0e5e'
+  module:
+    - block_content
+  theme:
+    - bootstrap
+id: jesuisunblocpersonnalise
+theme: bootstrap
+region: sidebar_second
+weight: 0
+provider: null
+plugin: 'block_content:49cc946e-d641-47ac-9c97-2aaa94db0e5e'
+settings:
+  id: 'block_content:49cc946e-d641-47ac-9c97-2aaa94db0e5e'
+  label: 'Je suis un bloc personnalisé'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

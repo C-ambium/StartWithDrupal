@@ -1,7 +1,7 @@
 uuid: 71977dca-ea85-4a25-8838-4fdaaa130a95
-name: Drupal
-mail: admin@example.com
-slogan: ''
+name: 'Start With Drupal'
+mail: colin.cerveaux@niji.fr
+slogan: 'Make your life like a Shell'
 page:
   403: ''
   404: ''

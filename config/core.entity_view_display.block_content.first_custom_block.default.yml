@@ -1,0 +1,23 @@
+uuid: 09fdd03d-68cc-4f8e-9bf2-d2a407322216
+langcode: fr
+status: true
+dependencies:
+  config:
+    - block_content.type.first_custom_block
+    - field.field.block_content.first_custom_block.body
+  module:
+    - text
+id: block_content.first_custom_block.default
+targetEntityType: block_content
+bundle: first_custom_block
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
