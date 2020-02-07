@@ -121,3 +121,5 @@ $config['views.settings']['ui']['show']['performance_statistics'] = TRUE;
 $config['system.performance']['cache.page.max_age'] = 31536000;
 
 $config['config_split.config_split.config_dev']['status'] = TRUE;
+
+$config['system.file']['path']['temporary'] = '/tmp';
