@@ -21,3 +21,4 @@ regions:
 
 libraries:
 # - 'bootstrap/theme'
+  - bootstrap_theme/global-styling

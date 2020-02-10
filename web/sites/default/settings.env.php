@@ -45,7 +45,7 @@ $config['system.performance']['response']['gzip'] = TRUE;
 $config['views.settings']['ui']['show']['sql_query']['enabled'] = FALSE;
 $config['views.settings']['ui']['show']['performance_statistics'] = FALSE;
 $config['system.logging']['error_level'] = 'none';
-$config['system.performance']['cache.page.max_age'] = 31536000;
+$config['system.performance']['cache.page.max_age'] = 0;
 
 
 $settings['trusted_host_patterns'] = [

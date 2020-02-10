@@ -1,0 +1,15 @@
+.field {
+    text-align: justify;
+    padding-right: 3rem;
+}
+
+h2 {
+    padding-top: 0.4em;
+}
+
+ul.links.inline.list-inline, .author, div.form-item{
+    text-align: right;
+    padding-right: 3rem;
+}
+
+

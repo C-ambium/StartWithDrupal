@@ -1,0 +1,11 @@
+h1 {
+    color: #7b59c0;
+}
+
+h4.label {
+    color: slategrey;
+}
+
+body {
+    background: rgba(100,100,100,0.05);
+}
