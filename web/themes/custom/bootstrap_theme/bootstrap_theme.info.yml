@@ -22,3 +22,4 @@ regions:
 libraries:
 # - 'bootstrap/theme'
   - bootstrap_theme/global-styling
+  - bootstrap_theme/css-filling

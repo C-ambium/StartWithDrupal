@@ -7,6 +7,12 @@ global-styling:
       css/style.css: {}
       css/colors.css: {}
 # ___________________________________________________________________________________ #
+css-filling:
+  css:
+    theme:
+      css/cast-view.css: {}
+# ___________________________________________________________________________________ #
+
 attributes:
   js:
     js/attributes.js: {}

@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Contains startwithdrupal_bootstrap_theme.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Node\Entity\Node;
+
+/**
+ * Implements hook_help().
+ */
+function startwithdrupal_bootstrap_theme_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the startwithdrupal_bootstrap_theme module.
+    case 'help.page.startwithdrupal_bootstrap_theme':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+function startwithdrupal_bootstrap_theme_preprocess_node(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  /** @var Node $node */
+  if ($node) {
+    if ($node->getType() == "cast") {
+      $variables['#attached']['library'][] = 'bootstrap_theme/css-filling';
+    }
+  }
+}

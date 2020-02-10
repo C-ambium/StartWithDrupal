@@ -3,6 +3,14 @@
     padding-right: 3rem;
 }
 
+header#navbar {
+    background: rgba(255,255,255,0.5);
+}
+
+header div.input-group {
+    padding-top: 0.5em;
+}
+
 h2 {
     padding-top: 0.4em;
 }

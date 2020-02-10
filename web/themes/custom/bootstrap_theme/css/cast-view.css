@@ -3,3 +3,11 @@ div.col-sm-12 {
     width: max-content;
     height: max-content;
 }
+
+header {
+    display: none;
+}
+
+body {
+    background: black;
+}
