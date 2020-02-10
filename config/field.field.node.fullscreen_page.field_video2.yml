@@ -1,0 +1,23 @@
+uuid: f9513094-6120-4caf-ade5-8646ad41f50d
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video2
+    - node.type.fullscreen_page
+  module:
+    - entity_reference_revisions
+id: node.fullscreen_page.field_video2
+field_name: field_video2
+entity_type: node
+bundle: fullscreen_page
+label: video2
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings: {  }
+field_type: entity_reference_revisions

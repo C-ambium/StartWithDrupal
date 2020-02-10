@@ -1,0 +1,31 @@
+uuid: ba002f94-6dbf-425f-ac14-94f48ea16d1a
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pargraphs
+    - node.type.article
+    - paragraphs.paragraphs_type.media_image_video
+  module:
+    - entity_reference_revisions
+id: node.article.field_pargraphs
+field_name: field_pargraphs
+entity_type: node
+bundle: article
+label: pargraphs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      media_image_video: media_image_video
+    target_bundles_drag_drop:
+      media_image_video:
+        enabled: true
+        weight: 2
+field_type: entity_reference_revisions

@@ -1,0 +1,21 @@
+uuid: 28fdfea2-888c-4b78-9a0c-7ddd08f05a2a
+langcode: fr
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+_core:
+  default_config_hash: iEBwBhx26JqfH0o93qllArFw8vwKH0PSSG8892jy_Rs
+id: paragraph.field_subtitle
+field_name: field_subtitle
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

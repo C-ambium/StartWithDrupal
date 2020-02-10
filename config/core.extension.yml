@@ -13,6 +13,9 @@ module:
   devel_generate: 0
   devel_generate_example: 0
   dynamic_page_cache: 0
+  entity_browser: 0
+  entity_browser_entity_form: 0
+  entity_reference_revisions: 0
   faker: 0
   field: 0
   field_ui: 0
@@ -20,6 +23,7 @@ module:
   filter: 0
   help: 0
   image: 0
+  inline_entity_form: 0
   language: 0
   link: 0
   locale: 0
@@ -27,10 +31,13 @@ module:
   media_library: 0
   menu_ui: 0
   node: 0
+  options: 0
   page_cache: 0
   quickedit: 0
   redis: 0
   search: 0
+  sk_commons: 0
+  sk_paragraph_media_image_video: 0
   system: 0
   taxonomy: 0
   text: 0
@@ -39,6 +46,7 @@ module:
   views_ui: 0
   menu_link_content: 1
   views: 10
+  paragraphs: 11
   starter_kit: 1000
 theme:
   stable: 0

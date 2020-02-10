@@ -1,47 +1,24 @@
-uuid: e45536d0-0148-4206-9791-0581d94d0746
+uuid: ccad9690-4c6e-4586-a0cc-bebbc7094a2d
 langcode: fr
 status: true
 dependencies:
   config:
-    - field.field.node.article.body
-    - field.field.node.article.field_image_article
-    - field.field.node.article.field_pargraphs
-    - image.style.thumbnail
-    - node.type.article
+    - field.field.node.fullscreen_page.field_video2
+    - node.type.fullscreen_page
   module:
-    - image
     - paragraphs
-    - text
-id: node.article.default
+id: node.fullscreen_page.default
 targetEntityType: node
-bundle: article
+bundle: fullscreen_page
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 121
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_image_article:
-    weight: 122
-    settings:
-      progress_indicator: throbber
-      preview_image_style: thumbnail
-    third_party_settings: {  }
-    type: image_image
-    region: content
-  field_pargraphs:
+  field_video2:
     type: entity_reference_paragraphs
     weight: 123
     settings:

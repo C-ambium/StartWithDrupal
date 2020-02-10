@@ -1,0 +1,11 @@
+uuid: cd1467a5-e3a6-4692-b086-570f272dd5bb
+langcode: fr
+status: true
+dependencies:
+  config:
+    - node.type.fullscreen_page
+id: node.fullscreen_page
+target_entity_type_id: node
+target_bundle: fullscreen_page
+default_langcode: site_default
+language_alterable: false

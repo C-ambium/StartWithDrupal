@@ -1,0 +1,24 @@
+uuid: 26dcf86b-4ed1-4f46-923e-9f75b8720eb7
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.media_image_video.field_media
+    - paragraphs.paragraphs_type.media_image_video
+_core:
+  default_config_hash: 8t354zTFF2Dw4W9qMEh0ncDmCaTEiNDSQTK3shkUgSs
+id: paragraph.media_image_video.default
+targetEntityType: paragraph
+bundle: media_image_video
+mode: default
+content:
+  field_media:
+    type: entity_reference_entity_view
+    weight: 0
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+hidden: {  }

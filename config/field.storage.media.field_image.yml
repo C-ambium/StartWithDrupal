@@ -1,0 +1,35 @@
+uuid: faae1cd7-9555-4b4f-8a22-dac9f41762ee
+langcode: fr
+status: true
+dependencies:
+  enforced:
+    module:
+      - media
+  module:
+    - file
+    - image
+    - media
+_core:
+  default_config_hash: IM9A9N8pP5odTUgwksQQ9Vnsoi_RtaND1mF54GroUQY
+id: media.field_image
+field_name: field_image
+entity_type: media
+type: image
+settings:
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: public
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

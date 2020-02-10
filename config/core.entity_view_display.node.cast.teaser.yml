@@ -1,0 +1,23 @@
+uuid: e1061b6f-8cbf-4d8d-8594-2acd2ce16450
+langcode: fr
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.cast.field_url
+    - node.type.cast
+  module:
+    - user
+id: node.cast.teaser
+targetEntityType: node
+bundle: cast
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_url: true
+  langcode: true

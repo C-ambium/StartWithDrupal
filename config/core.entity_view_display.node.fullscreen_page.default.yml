@@ -1,0 +1,31 @@
+uuid: 5615d846-8ff6-4da9-8abf-397358f47bd9
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.node.fullscreen_page.field_video2
+    - node.type.fullscreen_page
+  module:
+    - entity_reference_revisions
+    - user
+id: node.fullscreen_page.default
+targetEntityType: node
+bundle: fullscreen_page
+mode: default
+content:
+  field_video2:
+    type: entity_reference_revisions_entity_view
+    weight: 103
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

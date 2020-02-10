@@ -1,0 +1,29 @@
+uuid: 5c211673-24e7-42ec-b36c-218c8509a31c
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.field.node.cast.field_url
+    - node.type.cast
+  module:
+    - user
+id: node.cast.default
+targetEntityType: node
+bundle: cast
+mode: default
+content:
+  field_url:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true

@@ -1,0 +1,32 @@
+uuid: ab4d194c-7de3-4c2c-8ba8-f6b98581e62a
+langcode: fr
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_media
+    - media.type.image
+    - paragraphs.paragraphs_type.media_image_video
+_core:
+  default_config_hash: J0FxAP44Ne6Y6yKHtIi61iUsVAfInsTqOajwSwh6PDw
+id: paragraph.media_image_video.field_media
+field_name: field_media
+entity_type: paragraph
+bundle: media_image_video
+label: 'Media image video'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      video_embed: video_embed
+      video_file: video_file
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

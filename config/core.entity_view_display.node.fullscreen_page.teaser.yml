@@ -1,0 +1,23 @@
+uuid: 044ae468-7d27-441e-b7c6-64e523395346
+langcode: fr
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.fullscreen_page.field_video2
+    - node.type.fullscreen_page
+  module:
+    - user
+id: node.fullscreen_page.teaser
+targetEntityType: node
+bundle: fullscreen_page
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_video2: true
+  langcode: true

@@ -1,0 +1,16 @@
+uuid: 63e76dd8-16f1-4346-8503-12d9faa9f17e
+langcode: fr
+status: true
+dependencies:
+  module:
+    - paragraphs_browser
+third_party_settings:
+  paragraphs_browser:
+    image_path: profiles/contrib/starter_kit/modules/sk_paragraph_media_image_video/img/image_video.png
+_core:
+  default_config_hash: Ej4hi7hHKLuUIsvxPwLF9W6sQYQcz6wLMS-Y2BbpxCk
+id: media_image_video
+label: 'Image or Video'
+icon_uuid: null
+description: 'Use <em>Image or Video</em> for adding an image or a video.'
+behavior_plugins: {  }
